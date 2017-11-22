@@ -45,6 +45,8 @@ public class MainActivity extends AppCompatActivity
     TextView mLtcPrice, mLtcOwned, mUsdLtcWorth;
     TextView mUkgPrice, mUkgOwned, mUsdUkgWorth;
 
+    String test;
+
     View mBitcoinView, mEthereumView, mBitcoinCashView, mRippleView, mLitecoinView, mUnikoinGoldView;
 
     SwipeRefreshLayout refreshLayout;
