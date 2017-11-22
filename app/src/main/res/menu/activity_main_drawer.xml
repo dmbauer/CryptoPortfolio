@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_portfolio"
+            android:icon="@drawable/ic_portfolio"
+            android:title="Portfolio" />
+        <item
+            android:id="@+id/nav_charts"
+            android:icon="@drawable/ic_pie_chart"
+            android:title="Charts" />
+        <item
+            android:id="@+id/nav_add_coins"
+            android:icon="@drawable/ic_menu_slideshow"
+            android:title="Add Coins" />
+        <item
+            android:id="@+id/nav_donate"
+            android:icon="@drawable/ic_btc"
+            android:title="Donate" />
+    </group>
+
+</menu>
