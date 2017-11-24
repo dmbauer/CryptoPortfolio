@@ -443,7 +443,7 @@ public class MainActivity extends AppCompatActivity
             mUkgPrice = findViewById(R.id.ukg_price);
             mUkgOwned = findViewById(R.id.ukg_owned);
             mUsdUkgWorth = findViewById(R.id.usd_worth_ukg);
-            
+
             LineChart btcLineChart = findViewById(R.id.btc_line_chart);
             LineChart ethLineChart = findViewById(R.id.eth_line_chart);
             LineChart ltcLineChart = findViewById(R.id.ltc_line_chart);
