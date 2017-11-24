@@ -31,52 +31,68 @@
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_weight="1">
 
                     <ImageView
                         android:id="@+id/image_btc"
-                        android:layout_width="50dp"
-                        android:layout_height="50dp"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
                         android:layout_gravity="center"
-                        android:layout_marginStart="8dp"
+                        android:layout_marginStart="16dp"
                         android:layout_marginEnd="8dp"
                         android:gravity="center"
                         android:src="@drawable/btc2x"/>
 
-                    <TextView
-                        android:id="@+id/btc_owned"
+                    <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="24dp"
-                        android:layout_marginEnd="8dp"
-                        android:layout_gravity="center"
-                        android:gravity="center"
-                        android:textSize="18sp"
-                        android:text="BTC Owned"/>
+                        android:layout_marginStart="32dp"
+                        android:layout_marginTop="16dp"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/btc_price"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:gravity="center"
+                            android:textSize="18sp"
+                            android:text="1.0000000"/>
+
+                        <TextView
+                            android:id="@+id/btc_owned"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:gravity="center"
+                            android:textSize="18sp"
+                            android:text="BTC Owned"/>
+
+                    </LinearLayout>
 
                     <TextView
-                        android:id="@+id/btc_price"
+                        android:id="@+id/usd_worth_btc"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="16dp"
-                        android:layout_marginEnd="8dp"
-                        android:layout_gravity="center"
                         android:gravity="center"
-                        android:textSize="18sp"
-                        android:text="1.0000000"/>
+                        android:layout_marginTop="16dp"
+                        android:layout_marginStart="32dp"
+                        android:textSize="34sp"
+                        android:text="$234.56"/>
 
                 </LinearLayout>
 
-                <TextView
-                    android:id="@+id/usd_worth_btc"
+                <com.github.mikephil.charting.charts.LineChart
+                    android:id="@+id/btc_line_chart"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:layout_marginBottom="20dp"
-                    android:gravity="center"
-                    android:textSize="34sp"/>
+                    android:layout_height="0dp"
+                    android:layout_marginStart="4dp"
+                    android:layout_marginEnd="4dp"
+                    android:layout_marginBottom="2dp"
+                    android:layout_weight="4">
 
+                </com.github.mikephil.charting.charts.LineChart>
 
             </LinearLayout>
 
@@ -92,50 +108,68 @@
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_weight="1">
 
                     <ImageView
                         android:id="@+id/image_eth"
-                        android:layout_width="50dp"
-                        android:layout_height="50dp"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
                         android:layout_gravity="center"
-                        android:layout_marginStart="8dp"
+                        android:layout_marginStart="16dp"
                         android:layout_marginEnd="8dp"
                         android:gravity="center"
                         android:src="@drawable/eth2x"/>
 
-                    <TextView
-                        android:id="@+id/eth_owned"
+                    <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="24dp"
-                        android:layout_marginEnd="8dp"
-                        android:layout_gravity="center"
-                        android:gravity="center"
-                        android:textSize="18sp"
-                        android:text="ETH Owned"/>
+                        android:layout_marginStart="32dp"
+                        android:layout_marginTop="16dp"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/eth_price"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:gravity="center"
+                            android:textSize="18sp"
+                            android:text="1.0000000"/>
+
+                        <TextView
+                            android:id="@+id/eth_owned"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:gravity="center"
+                            android:textSize="18sp"
+                            android:text="BTC Owned"/>
+
+                    </LinearLayout>
 
                     <TextView
-                        android:id="@+id/eth_price"
+                        android:id="@+id/usd_worth_eth"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="16dp"
-                        android:layout_marginEnd="8dp"
-                        android:layout_gravity="center"
                         android:gravity="center"
-                        android:textSize="18sp" />
+                        android:layout_marginTop="16dp"
+                        android:layout_marginStart="32dp"
+                        android:textSize="34sp"
+                        android:text="$234.56"/>
 
                 </LinearLayout>
 
-                <TextView
-                    android:id="@+id/usd_worth_eth"
+                <com.github.mikephil.charting.charts.LineChart
+                    android:id="@+id/eth_line_chart"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:layout_marginBottom="20dp"
-                    android:gravity="center"
-                    android:textSize="34sp"/>
+                    android:layout_height="0dp"
+                    android:layout_marginStart="4dp"
+                    android:layout_marginEnd="4dp"
+                    android:layout_marginBottom="2dp"
+                    android:layout_weight="4">
+
+                </com.github.mikephil.charting.charts.LineChart>
 
             </LinearLayout>
 
@@ -143,58 +177,76 @@
                 android:id="@+id/bitcoin_cash_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
                 android:elevation="4dp"
                 android:layout_margin="8dp"
+                android:orientation="vertical"
                 android:backgroundTint="@android:color/white"
                 android:background="@drawable/shape">
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_weight="1">
 
                     <ImageView
                         android:id="@+id/image_bch"
-                        android:layout_width="50dp"
-                        android:layout_height="50dp"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
                         android:layout_gravity="center"
-                        android:layout_marginStart="8dp"
+                        android:layout_marginStart="16dp"
                         android:layout_marginEnd="8dp"
                         android:gravity="center"
                         android:src="@drawable/bch2x"/>
 
-                    <TextView
-                        android:id="@+id/bch_owned"
+                    <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="24dp"
-                        android:layout_marginEnd="8dp"
-                        android:layout_gravity="center"
-                        android:gravity="center"
-                        android:textSize="18sp"
-                        android:text="BCH Owned"/>
+                        android:layout_marginStart="32dp"
+                        android:layout_marginTop="16dp"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/bch_price"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:gravity="center"
+                            android:textSize="18sp"
+                            android:text="1.0000000"/>
+
+                        <TextView
+                            android:id="@+id/bch_owned"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:gravity="center"
+                            android:textSize="18sp"
+                            android:text="BTC Owned"/>
+
+                    </LinearLayout>
 
                     <TextView
-                        android:id="@+id/bch_price"
+                        android:id="@+id/usd_worth_bch"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="16dp"
-                        android:layout_marginEnd="8dp"
-                        android:layout_gravity="center"
                         android:gravity="center"
-                        android:textSize="18sp" />
+                        android:layout_marginTop="16dp"
+                        android:layout_marginStart="32dp"
+                        android:textSize="34sp"
+                        android:text="$234.56"/>
 
                 </LinearLayout>
 
-                <TextView
-                    android:id="@+id/usd_worth_bch"
+                <com.github.mikephil.charting.charts.LineChart
+                    android:id="@+id/bch_line_chart"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:layout_marginBottom="20dp"
-                    android:gravity="center"
-                    android:textSize="34sp"/>
+                    android:layout_height="0dp"
+                    android:layout_marginStart="4dp"
+                    android:layout_marginEnd="4dp"
+                    android:layout_marginBottom="2dp"
+                    android:layout_weight="4">
+
+                </com.github.mikephil.charting.charts.LineChart>
 
             </LinearLayout>
 
@@ -202,58 +254,76 @@
                 android:id="@+id/ripple_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
                 android:elevation="4dp"
                 android:layout_margin="8dp"
+                android:orientation="vertical"
                 android:backgroundTint="@android:color/white"
                 android:background="@drawable/shape">
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_weight="1">
 
                     <ImageView
                         android:id="@+id/image_xrp"
-                        android:layout_width="50dp"
-                        android:layout_height="50dp"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
                         android:layout_gravity="center"
-                        android:layout_marginStart="8dp"
+                        android:layout_marginStart="16dp"
                         android:layout_marginEnd="8dp"
                         android:gravity="center"
                         android:src="@drawable/xrp2x"/>
 
-                    <TextView
-                        android:id="@+id/xrp_owned"
+                    <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="24dp"
-                        android:layout_marginEnd="8dp"
-                        android:layout_gravity="center"
-                        android:gravity="center"
-                        android:textSize="18sp"
-                        android:text="XRP Owned"/>
+                        android:layout_marginStart="32dp"
+                        android:layout_marginTop="16dp"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/xrp_price"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:gravity="center"
+                            android:textSize="18sp"
+                            android:text="1.0000000"/>
+
+                        <TextView
+                            android:id="@+id/xrp_owned"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:gravity="center"
+                            android:textSize="18sp"
+                            android:text="BTC Owned"/>
+
+                    </LinearLayout>
 
                     <TextView
-                        android:id="@+id/xrp_price"
+                        android:id="@+id/usd_worth_xrp"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="16dp"
-                        android:layout_marginEnd="8dp"
-                        android:layout_gravity="center"
                         android:gravity="center"
-                        android:textSize="18sp" />
+                        android:layout_marginTop="16dp"
+                        android:layout_marginStart="32dp"
+                        android:textSize="34sp"
+                        android:text="$234.56"/>
 
                 </LinearLayout>
 
-                <TextView
-                    android:id="@+id/usd_worth_xrp"
+                <com.github.mikephil.charting.charts.LineChart
+                    android:id="@+id/xrp_line_chart"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:layout_marginBottom="20dp"
-                    android:gravity="center"
-                    android:textSize="34sp"/>
+                    android:layout_height="0dp"
+                    android:layout_marginStart="4dp"
+                    android:layout_marginEnd="4dp"
+                    android:layout_marginBottom="2dp"
+                    android:layout_weight="4">
+
+                </com.github.mikephil.charting.charts.LineChart>
 
             </LinearLayout>
 
@@ -261,58 +331,76 @@
                 android:id="@+id/litecoin_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
                 android:elevation="4dp"
                 android:layout_margin="8dp"
+                android:orientation="vertical"
                 android:backgroundTint="@android:color/white"
                 android:background="@drawable/shape">
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_weight="1">
 
                     <ImageView
                         android:id="@+id/image_ltc"
-                        android:layout_width="50dp"
-                        android:layout_height="50dp"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
                         android:layout_gravity="center"
-                        android:layout_marginStart="8dp"
+                        android:layout_marginStart="16dp"
                         android:layout_marginEnd="8dp"
                         android:gravity="center"
                         android:src="@drawable/ltc2x"/>
 
-                    <TextView
-                        android:id="@+id/ltc_owned"
+                    <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="24dp"
-                        android:layout_marginEnd="8dp"
-                        android:layout_gravity="center"
-                        android:gravity="center"
-                        android:textSize="18sp"
-                        android:text="LTC Owned"/>
+                        android:layout_marginStart="32dp"
+                        android:layout_marginTop="16dp"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/ltc_price"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:gravity="center"
+                            android:textSize="18sp"
+                            android:text="1.0000000"/>
+
+                        <TextView
+                            android:id="@+id/ltc_owned"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:gravity="center"
+                            android:textSize="18sp"
+                            android:text="BTC Owned"/>
+
+                    </LinearLayout>
 
                     <TextView
-                        android:id="@+id/ltc_price"
+                        android:id="@+id/usd_worth_ltc"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="16dp"
-                        android:layout_marginEnd="8dp"
-                        android:layout_gravity="center"
                         android:gravity="center"
-                        android:textSize="18sp" />
+                        android:layout_marginTop="16dp"
+                        android:layout_marginStart="32dp"
+                        android:textSize="34sp"
+                        android:text="$234.56"/>
 
                 </LinearLayout>
 
-                <TextView
-                    android:id="@+id/usd_worth_ltc"
+                <com.github.mikephil.charting.charts.LineChart
+                    android:id="@+id/ltc_line_chart"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:layout_marginBottom="20dp"
-                    android:gravity="center"
-                    android:textSize="34sp"/>
+                    android:layout_height="0dp"
+                    android:layout_marginStart="4dp"
+                    android:layout_marginEnd="4dp"
+                    android:layout_marginBottom="2dp"
+                    android:layout_weight="4">
+
+                </com.github.mikephil.charting.charts.LineChart>
 
             </LinearLayout>
 
@@ -320,58 +408,76 @@
                 android:id="@+id/unikoin_gold_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
                 android:elevation="4dp"
                 android:layout_margin="8dp"
+                android:orientation="vertical"
                 android:backgroundTint="@android:color/white"
                 android:background="@drawable/shape">
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_weight="1">
 
                     <ImageView
                         android:id="@+id/image_ukg"
-                        android:layout_width="50dp"
-                        android:layout_height="50dp"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
                         android:layout_gravity="center"
-                        android:layout_marginStart="8dp"
-                        android:layout_marginEnd="8dp"
-                        android:gravity="center"
-                        android:src="@drawable/ic_eth"/>
-
-                    <TextView
-                        android:id="@+id/ukg_owned"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="24dp"
-                        android:layout_marginEnd="8dp"
-                        android:layout_gravity="center"
-                        android:gravity="center"
-                        android:textSize="18sp"
-                        android:text="UKG Owned"/>
-
-                    <TextView
-                        android:id="@+id/ukg_price"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
                         android:layout_marginStart="16dp"
                         android:layout_marginEnd="8dp"
-                        android:layout_gravity="center"
                         android:gravity="center"
-                        android:textSize="18sp" />
+                        android:src="@drawable/ic_ukg"/>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="32dp"
+                        android:layout_marginTop="16dp"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/ukg_price"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:gravity="center"
+                            android:textSize="18sp"
+                            android:text="1.0000000"/>
+
+                        <TextView
+                            android:id="@+id/ukg_owned"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:gravity="center"
+                            android:textSize="18sp"
+                            android:text="BTC Owned"/>
+
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/usd_worth_ukg"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:layout_marginTop="16dp"
+                        android:layout_marginStart="32dp"
+                        android:textSize="34sp"
+                        android:text="$234.56"/>
 
                 </LinearLayout>
 
-                <TextView
-                    android:id="@+id/usd_worth_ukg"
+                <com.github.mikephil.charting.charts.LineChart
+                    android:id="@+id/ukg_line_chart"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:layout_marginBottom="20dp"
-                    android:gravity="center"
-                    android:textSize="34sp"/>
+                    android:layout_height="0dp"
+                    android:layout_marginStart="4dp"
+                    android:layout_marginEnd="4dp"
+                    android:layout_marginBottom="2dp"
+                    android:layout_weight="4">
+
+                </com.github.mikephil.charting.charts.LineChart>
 
             </LinearLayout>
 

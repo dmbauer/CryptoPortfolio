@@ -9,4 +9,9 @@
     <color name="colorBackground">#F5F5F5</color>
     <color name="colorDivider">#BDBDBD</color>
     <color name="colorGreen">#4CAF50</color>
+    <color name="colorOrange">#ffa726</color>
+    <color name="colorBlue">#2196f3</color>
+    <color name="colorRed">#f44336</color>
+    <color name="colorPurple">#9c27b0</color>
+    <color name="colorYellow">#ffeb3b</color>
 </resources>

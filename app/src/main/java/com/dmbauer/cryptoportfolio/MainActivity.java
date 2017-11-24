@@ -1,6 +1,8 @@
 package com.dmbauer.cryptoportfolio;
 
+import android.content.ClipData;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
@@ -18,6 +20,16 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 
+import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.components.Description;
+import com.github.mikephil.charting.components.Legend;
+import com.github.mikephil.charting.components.XAxis;
+import com.github.mikephil.charting.components.YAxis;
+import com.github.mikephil.charting.data.DataSet;
+import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.LineData;
+import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.utils.EntryXComparator;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.SyncHttpClient;
 import com.orhanobut.hawk.Hawk;
@@ -25,18 +37,30 @@ import com.orhanobut.hawk.Hawk;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
+
 import cz.msebera.android.httpclient.Header;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     final String CRYPTO_URL = "https://api.coinmarketcap.com/v1/ticker/";
-    final String bitcoinURL = CRYPTO_URL + "bitcoin";
-    final String ethereumURL = CRYPTO_URL + "ethereum";
-    final String bitcoinCashURL = CRYPTO_URL + "bitcoin-cash";
-    final String rippleURL = CRYPTO_URL + "ripple";
-    final String liteCoinURL = CRYPTO_URL + "litecoin";
-    final String unikoinGoldURL = CRYPTO_URL + "unikoin-gold";
+    final String BITCOIN_URL = CRYPTO_URL + "bitcoin";
+    final String ETHEREUM_URL = CRYPTO_URL + "ethereum";
+    final String BITCOIN_CASH_URL = CRYPTO_URL + "bitcoin-cash";
+    final String RIPPLE_URL = CRYPTO_URL + "ripple";
+    final String LITECOIN_URL = CRYPTO_URL + "litecoin";
+    final String UNIKOIN_GOLD_URL = CRYPTO_URL + "unikoin-gold";
+
+    final String BITCOIN_HISTORY_URL = "https://min-api.cryptocompare.com/data/histominute?fsym=BTC&tsym=USD&limit=96&aggregate=15&e=CCCAGG";
+    final String ETHEREUM_HISTORY_URL = "https://min-api.cryptocompare.com/data/histominute?fsym=ETH&tsym=USD&limit=96&aggregate=15&e=CCCAGG";
+    final String LITECOIN_HISTORY_URL = "https://min-api.cryptocompare.com/data/histominute?fsym=LTC&tsym=USD&limit=96&aggregate=15&e=CCCAGG";
+    final String UNIKOIN_GOLD_HISTORY_URL = "https://min-api.cryptocompare.com/data/histominute?fsym=UKG&tsym=USD&limit=96&aggregate=15&e=CCCAGG";
+    final String BITCOIN_CASH_HISTORY_URL = "https://min-api.cryptocompare.com/data/histominute?fsym=BCH&tsym=USD&limit=96&aggregate=15&e=CCCAGG";
+    final String RIPPLE_HISTORY_URL = "https://min-api.cryptocompare.com/data/histominute?fsym=XRP&tsym=USD&limit=96&aggregate=15&e=CCCAGG";
+    final String DASH_HISTORY_URL = "https://min-api.cryptocompare.com/data/histominute?fsym=DASH&tsym=USD&limit=96&aggregate=15&e=CCCAGG";
 
     TextView mBtcPrice, mBtcOwned, mUsdBtcWorth;
     TextView mEthPrice, mEthOwned, mUsdEthWorth;
@@ -44,8 +68,6 @@ public class MainActivity extends AppCompatActivity
     TextView mXrpPrice, mXrpOwned, mUsdXrpWorth;
     TextView mLtcPrice, mLtcOwned, mUsdLtcWorth;
     TextView mUkgPrice, mUkgOwned, mUsdUkgWorth;
-
-    String test;
 
     View mBitcoinView, mEthereumView, mBitcoinCashView, mRippleView, mLitecoinView, mUnikoinGoldView;
 
@@ -55,6 +77,9 @@ public class MainActivity extends AppCompatActivity
     double btcChange24, ethChange24, bchChange24, xrpChange24, ltcChange24, ukgChange24;
 
     double btcOwn, ethOwn, bchOwn, xrpOwn, ltcOwn, ukgOwn;
+
+    float[] mBtcHistory, mEthHistory, mLtcHistory, mUkgHistory, mBchHistory, mXrpHistory;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,23 +125,46 @@ public class MainActivity extends AppCompatActivity
 
     public class CoinLoader extends AsyncTask<Void, Void, Void> {
 
-
         @Override
         protected Void doInBackground(Void... voids) {
 
-            SyncHttpClient client = new SyncHttpClient();
+                SyncHttpClient client = new SyncHttpClient();
 
-            client.get(bitcoinURL, new JsonHttpResponseHandler() {
+                client.get(BITCOIN_URL, new JsonHttpResponseHandler() {
+
+                    @Override
+                    public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
+                        // called when response HTTP status is "200 OK"
+                        Log.d("CryptoPortfolio", "JSON: " + response.toString());
+
+                        GetCoinData coinData = GetCoinData.fromJson(response);
+
+                        btcPrice = coinData.getCoinPrice();
+                        btcChange24 = coinData.getPercentChange24();
+
+                    }
+
+                    @Override
+                    public void onFailure(int statusCode, Header[] headers, Throwable e, JSONObject response) {
+                        // called when response HTTP status is "4XX" (eg. 401, 403, 404)
+                        Log.e("CryptoPortfolio", "Fail " + e.toString());
+                        Log.d("CryptoPortfolio", "Status code " + statusCode);
+                    }
+
+                });
+
+            client.get(BITCOIN_HISTORY_URL, new JsonHttpResponseHandler() {
 
                 @Override
-                public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
+                public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                     // called when response HTTP status is "200 OK"
                     Log.d("CryptoPortfolio", "JSON: " + response.toString());
 
-                    GetCoinData coinData = GetCoinData.fromJson(response);
+                    GetCoinHistory coinHistory = GetCoinHistory.fromJson(response);
 
-                    btcPrice = coinData.getCoinPrice();
-                    btcChange24 = coinData.getPercentChange24();
+                    mBtcHistory = coinHistory.getCoinHistory();
+
+                    Log.d("Crypto", Double.toString(mBtcHistory[1]));
 
                 }
 
@@ -129,7 +177,7 @@ public class MainActivity extends AppCompatActivity
 
             });
 
-            client.get(ethereumURL, new JsonHttpResponseHandler() {
+            client.get(ETHEREUM_URL, new JsonHttpResponseHandler() {
 
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
@@ -152,7 +200,31 @@ public class MainActivity extends AppCompatActivity
 
             });
 
-            client.get(bitcoinCashURL, new JsonHttpResponseHandler() {
+            client.get(ETHEREUM_HISTORY_URL, new JsonHttpResponseHandler() {
+
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                    // called when response HTTP status is "200 OK"
+                    Log.d("CryptoPortfolio", "JSON: " + response.toString());
+
+                    GetCoinHistory coinHistory = GetCoinHistory.fromJson(response);
+
+                    mEthHistory = coinHistory.getCoinHistory();
+
+                    Log.d("Crypto", Double.toString(mEthHistory[1]));
+
+                }
+
+                @Override
+                public void onFailure(int statusCode, Header[] headers, Throwable e, JSONObject response) {
+                    // called when response HTTP status is "4XX" (eg. 401, 403, 404)
+                    Log.e("CryptoPortfolio", "Fail " + e.toString());
+                    Log.d("CryptoPortfolio", "Status code " + statusCode);
+                }
+
+            });
+
+            client.get(BITCOIN_CASH_URL, new JsonHttpResponseHandler() {
 
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
@@ -175,7 +247,28 @@ public class MainActivity extends AppCompatActivity
 
             });
 
-            client.get(rippleURL, new JsonHttpResponseHandler() {
+            client.get(BITCOIN_CASH_HISTORY_URL, new JsonHttpResponseHandler() {
+
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                    // called when response HTTP status is "200 OK"
+                    Log.d("CryptoPortfolio", "JSON: " + response.toString());
+
+                    GetCoinHistory coinHistory = GetCoinHistory.fromJson(response);
+
+                    mBchHistory = coinHistory.getCoinHistory();
+                }
+
+                @Override
+                public void onFailure(int statusCode, Header[] headers, Throwable e, JSONObject response) {
+                    // called when response HTTP status is "4XX" (eg. 401, 403, 404)
+                    Log.e("CryptoPortfolio", "Fail " + e.toString());
+                    Log.d("CryptoPortfolio", "Status code " + statusCode);
+                }
+
+            });
+
+            client.get(RIPPLE_URL, new JsonHttpResponseHandler() {
 
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
@@ -198,7 +291,29 @@ public class MainActivity extends AppCompatActivity
 
             });
 
-            client.get(liteCoinURL, new JsonHttpResponseHandler() {
+            client.get(RIPPLE_HISTORY_URL, new JsonHttpResponseHandler() {
+
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                    // called when response HTTP status is "200 OK"
+                    Log.d("CryptoPortfolio", "JSON: " + response.toString());
+
+                    GetCoinHistory coinHistory = GetCoinHistory.fromJson(response);
+
+                    mXrpHistory = coinHistory.getCoinHistory();
+
+                }
+
+                @Override
+                public void onFailure(int statusCode, Header[] headers, Throwable e, JSONObject response) {
+                    // called when response HTTP status is "4XX" (eg. 401, 403, 404)
+                    Log.e("CryptoPortfolio", "Fail " + e.toString());
+                    Log.d("CryptoPortfolio", "Status code " + statusCode);
+                }
+
+            });
+
+            client.get(LITECOIN_URL, new JsonHttpResponseHandler() {
 
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
@@ -221,7 +336,31 @@ public class MainActivity extends AppCompatActivity
 
             });
 
-            client.get(unikoinGoldURL, new JsonHttpResponseHandler() {
+            client.get(LITECOIN_HISTORY_URL, new JsonHttpResponseHandler() {
+
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                    // called when response HTTP status is "200 OK"
+                    Log.d("CryptoPortfolio", "JSON: " + response.toString());
+
+                    GetCoinHistory coinHistory = GetCoinHistory.fromJson(response);
+
+                    mLtcHistory = coinHistory.getCoinHistory();
+
+                    Log.d("Crypto", Double.toString(mLtcHistory[1]));
+
+                }
+
+                @Override
+                public void onFailure(int statusCode, Header[] headers, Throwable e, JSONObject response) {
+                    // called when response HTTP status is "4XX" (eg. 401, 403, 404)
+                    Log.e("CryptoPortfolio", "Fail " + e.toString());
+                    Log.d("CryptoPortfolio", "Status code " + statusCode);
+                }
+
+            });
+
+            client.get(UNIKOIN_GOLD_URL, new JsonHttpResponseHandler() {
 
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
@@ -232,6 +371,30 @@ public class MainActivity extends AppCompatActivity
 
                     ukgPrice = coinData.getCoinPrice();
                     ukgChange24 = coinData.getPercentChange24();
+
+                }
+
+                @Override
+                public void onFailure(int statusCode, Header[] headers, Throwable e, JSONObject response) {
+                    // called when response HTTP status is "4XX" (eg. 401, 403, 404)
+                    Log.e("CryptoPortfolio", "Fail " + e.toString());
+                    Log.d("CryptoPortfolio", "Status code " + statusCode);
+                }
+
+            });
+
+            client.get(UNIKOIN_GOLD_HISTORY_URL, new JsonHttpResponseHandler() {
+
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                    // called when response HTTP status is "200 OK"
+                    Log.d("CryptoPortfolio", "JSON: " + response.toString());
+
+                    GetCoinHistory coinHistory = GetCoinHistory.fromJson(response);
+
+                    mUkgHistory = coinHistory.getCoinHistory();
+
+                    Log.d("Crypto", Double.toString(mUkgHistory[1]));
 
                 }
 
@@ -280,6 +443,85 @@ public class MainActivity extends AppCompatActivity
             mUkgPrice = findViewById(R.id.ukg_price);
             mUkgOwned = findViewById(R.id.ukg_owned);
             mUsdUkgWorth = findViewById(R.id.usd_worth_ukg);
+            
+            LineChart btcLineChart = findViewById(R.id.btc_line_chart);
+            LineChart ethLineChart = findViewById(R.id.eth_line_chart);
+            LineChart ltcLineChart = findViewById(R.id.ltc_line_chart);
+            LineChart bchLineChart = findViewById(R.id.bch_line_chart);
+            LineChart xrpLineChart = findViewById(R.id.xrp_line_chart);
+            LineChart ukgLineChart = findViewById(R.id.ukg_line_chart);
+
+            ArrayList<Entry> btcEntries = new ArrayList<>();
+            for(int i=0; i < mBtcHistory.length; i++){
+                btcEntries.add(new Entry(i, mBtcHistory[i]));
+            }
+
+            LineDataSet btcDataSet = new LineDataSet(btcEntries, "");
+            LineData btcData = new LineData(btcDataSet);
+            btcLineChart.setData(btcData);
+            btcDataSet.setColor(getResources().getColor(R.color.colorOrange));
+
+            setLineProperties(btcLineChart, btcDataSet);
+
+            ArrayList<Entry> ethEntries = new ArrayList<>();
+            for(int i=0; i < mEthHistory.length; i++){
+                ethEntries.add(new Entry(i, mEthHistory[i]));
+            }
+
+            LineDataSet ethDataSet = new LineDataSet(ethEntries, "");
+            LineData ethData = new LineData(ethDataSet);
+            ethLineChart.setData(ethData);
+            ethDataSet.setColor(getResources().getColor(R.color.colorBlue));
+
+            setLineProperties(ethLineChart, ethDataSet);
+
+            ArrayList<Entry> bchEntries = new ArrayList<>();
+            for(int i=0; i < mBchHistory.length; i++){
+                bchEntries.add(new Entry(i, mBchHistory[i]));
+            }
+
+            LineDataSet bchDataSet = new LineDataSet(bchEntries, "");
+            LineData bchData = new LineData(bchDataSet);
+            bchLineChart.setData(bchData);
+            bchDataSet.setColor(getResources().getColor(R.color.colorRed));
+
+            setLineProperties(bchLineChart, bchDataSet);
+
+            ArrayList<Entry> xrpEntries = new ArrayList<>();
+            for(int i=0; i < mXrpHistory.length; i++){
+                xrpEntries.add(new Entry(i, mXrpHistory[i]));
+            }
+
+            LineDataSet xrpDataSet = new LineDataSet(xrpEntries, "");
+            LineData xrpData = new LineData(xrpDataSet);
+            xrpLineChart.setData(xrpData);
+            xrpDataSet.setColor(getResources().getColor(R.color.colorPurple));
+
+            setLineProperties(xrpLineChart, xrpDataSet);
+
+            ArrayList<Entry> ltcEntries = new ArrayList<>();
+            for(int i=0; i < mLtcHistory.length; i++){
+                ltcEntries.add(new Entry(i, mLtcHistory[i]));
+            }
+
+            LineDataSet ltcDataSet = new LineDataSet(ltcEntries, "");
+            LineData ltcData = new LineData(ltcDataSet);
+            ltcLineChart.setData(ltcData);
+            ltcDataSet.setColor(getResources().getColor(R.color.colorSecondaryText));
+
+            setLineProperties(ltcLineChart, ltcDataSet);
+
+            ArrayList<Entry> ukgEntries = new ArrayList<>();
+            for(int i=0; i < mUkgHistory.length; i++){
+                ukgEntries.add(new Entry(i, mUkgHistory[i]));
+            }
+
+            LineDataSet ukgDataSet = new LineDataSet(ukgEntries, "");
+            LineData ukgData = new LineData(ukgDataSet);
+            ukgLineChart.setData(ukgData);
+            ukgDataSet.setColor(getResources().getColor(R.color.colorYellow));
+
+            setLineProperties(ukgLineChart, ukgDataSet);
 
             if(Hawk.get("bitcoin") != null) {
 
@@ -420,6 +662,40 @@ public class MainActivity extends AppCompatActivity
 
     }
 
+    public void setLineProperties(LineChart lineChart, LineDataSet dataSet){
+        Description description = new Description();
+        description.setText("");
+        lineChart.setDescription(description);
+
+        dataSet.setDrawValues(false);
+        dataSet.setDrawFilled(false);
+        dataSet.setLineWidth(2f);
+        dataSet.setDrawCircles(false);
+
+        // style chart
+        lineChart.setBackgroundColor(-1);
+        lineChart.setDescription(description);
+        lineChart.setDrawGridBackground(false);
+        lineChart.setDrawBorders(false);
+
+        lineChart.setAutoScaleMinMaxEnabled(true);
+
+        // remove axis
+        YAxis leftAxis = lineChart.getAxisLeft();
+        leftAxis.setEnabled(false);
+        YAxis rightAxis = lineChart.getAxisRight();
+        rightAxis.setEnabled(false);
+
+        XAxis xAxis = lineChart.getXAxis();
+        xAxis.setEnabled(false);
+
+        // hide legend
+        Legend legend = lineChart.getLegend();
+        legend.setEnabled(false);
+
+        lineChart.invalidate();
+    }
+
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -446,7 +722,8 @@ public class MainActivity extends AppCompatActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-            return true;
+            Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
+            startActivity(intent);
         }
 
         return super.onOptionsItemSelected(item);
