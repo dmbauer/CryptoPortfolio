@@ -18,7 +18,7 @@ import com.orhanobut.hawk.Hawk;
 
 public class ChartActivity extends AppCompatActivity {
 
-    float bitcoinValue, ethereumValue, bitcoinCashValue, rippleValue, litecoinValue, unikoinGoldValue;
+    float bitcoinValue, ethereumValue, bitcoinCashValue, rippleValue, litecoinValue, unikoinGoldValue, dashValue;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +49,11 @@ public class ChartActivity extends AppCompatActivity {
             entries.add(new PieEntry(rippleValue, "Ripple"));
         }
 
+        if(Hawk.get("dash") != null) {
+            dashValue = Hawk.get("dash_value");
+            entries.add(new PieEntry(dashValue, "dash"));
+        }
+
         if(Hawk.get("litecoin") != null) {
             litecoinValue = Hawk.get("litecoin_value");
             entries.add(new PieEntry(litecoinValue, "Litecoin"));
@@ -60,7 +65,7 @@ public class ChartActivity extends AppCompatActivity {
         }
 
         float portfolioValue = Math.round(((bitcoinValue + ethereumValue +
-                bitcoinCashValue + rippleValue + litecoinValue + unikoinGoldValue) * 100.0) / 100.0);
+                bitcoinCashValue + rippleValue + litecoinValue + unikoinGoldValue + dashValue) * 100.0) / 100.0);
         String totalValue = Float.toString(portfolioValue);
 
         PieDataSet pieDataSet = new PieDataSet(entries, "");

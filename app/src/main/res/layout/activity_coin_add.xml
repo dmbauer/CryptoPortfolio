@@ -80,7 +80,7 @@
         android:layout_marginStart="24dp"
         android:gravity="center"
         android:text="@string/ripple"
-        app:layout_constraintBottom_toTopOf="@+id/textView5"
+        app:layout_constraintBottom_toTopOf="@+id/textView17"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView3" />
 
@@ -91,9 +91,20 @@
         android:layout_marginEnd="24dp"
         android:hint="Enter XRP Owned"
         android:inputType="numberDecimal"
-        app:layout_constraintBottom_toTopOf="@+id/enter_ltc"
+        app:layout_constraintBottom_toTopOf="@+id/enter_dash"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/enter_bch" />
+
+    <EditText
+        android:id="@+id/enter_dash"
+        android:layout_width="wrap_content"
+        android:layout_height="42dp"
+        android:layout_marginEnd="24dp"
+        android:hint="Enter Dash Owned"
+        android:inputType="numberDecimal"
+        app:layout_constraintBottom_toTopOf="@+id/enter_ltc"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/enter_xrp" />
 
     <TextView
         android:id="@+id/textView5"
@@ -104,7 +115,7 @@
         android:text="@string/litecoin"
         app:layout_constraintBottom_toTopOf="@+id/textView6"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView4" />
+        app:layout_constraintTop_toBottomOf="@+id/textView17" />
 
     <EditText
         android:id="@+id/enter_ltc"
@@ -115,7 +126,7 @@
         android:inputType="numberDecimal"
         app:layout_constraintBottom_toTopOf="@+id/enter_ukg"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/enter_xrp" />
+        app:layout_constraintTop_toBottomOf="@+id/enter_dash" />
 
     <TextView
         android:id="@+id/textView6"
@@ -143,13 +154,24 @@
         android:id="@+id/save_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
         android:layout_marginBottom="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="16dp"
         android:background="@color/colorAccent"
         android:text="Save"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/textView17"
+        android:layout_width="wrap_content"
+        android:layout_height="42dp"
+        android:layout_marginStart="24dp"
+        android:gravity="center"
+        android:text="Dash (DASH)"
+        app:layout_constraintBottom_toTopOf="@+id/textView5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView4" />
 
 </android.support.constraint.ConstraintLayout>

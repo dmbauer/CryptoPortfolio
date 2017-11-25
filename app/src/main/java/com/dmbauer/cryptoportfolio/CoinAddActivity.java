@@ -12,7 +12,7 @@ import com.orhanobut.hawk.Hawk;
 public class CoinAddActivity extends AppCompatActivity {
 
     Button mSaveButton;
-    EditText btcEntered, ethEntered, bchEntered, xrpEntered, ltcEntered, ukgEntered;
+    EditText btcEntered, ethEntered, bchEntered, xrpEntered, ltcEntered, ukgEntered, dashEntered;
     double currentBitcoin, currentEthereum, currentBitcoinCash, currentRipple, currentLitecoin, currentUnikoinGold;
     String currentBtc, currentEth, currentBch, currentXrp, currentLtc, currentUkg;
 
@@ -28,6 +28,7 @@ public class CoinAddActivity extends AppCompatActivity {
         xrpEntered = findViewById(R.id.enter_xrp);
         ltcEntered = findViewById(R.id.enter_ltc);
         ukgEntered = findViewById(R.id.enter_ukg);
+        dashEntered = findViewById(R.id.enter_dash);
 
         if(Hawk.get("bitcoin") != null) {
             currentBitcoin = Hawk.get("bitcoin");
@@ -53,6 +54,12 @@ public class CoinAddActivity extends AppCompatActivity {
             xrpEntered.setText(currentXrp);
         }
 
+        if(Hawk.get("dash") != null) {
+            double currentDash = Hawk.get("dash");
+            String currentDsh = Double.toString(currentDash);
+            dashEntered.setText(currentDsh);
+        }
+
         if(Hawk.get("litecoin") != null) {
             currentLitecoin = Hawk.get("litecoin");
             currentLtc = Double.toString(currentLitecoin);
@@ -76,7 +83,7 @@ public class CoinAddActivity extends AppCompatActivity {
                 if (btcEnt.isEmpty()){
                     Hawk.delete("bitcoin");
                 }else {
-                    double btc = Double.parseDouble(btcEntered.getText().toString());
+                    double btc = Double.parseDouble(btcEnt);
                     Hawk.put("bitcoin", btc);
                 }
 
@@ -85,7 +92,7 @@ public class CoinAddActivity extends AppCompatActivity {
                 if (ethEnt.isEmpty()){
                     Hawk.delete("ethereum");
                 }else {
-                    double eth = Double.parseDouble(ethEntered.getText().toString());
+                    double eth = Double.parseDouble(ethEnt);
                     Hawk.put("ethereum", eth);
                 }
 
@@ -94,7 +101,7 @@ public class CoinAddActivity extends AppCompatActivity {
                 if (bchEnt.isEmpty()){
                     Hawk.delete("bitcoin_cash");
                 }else {
-                    double bch = Double.parseDouble(bchEntered.getText().toString());
+                    double bch = Double.parseDouble(bchEnt);
                     Hawk.put("bitcoin_cash", bch);
                 }
 
@@ -103,8 +110,17 @@ public class CoinAddActivity extends AppCompatActivity {
                 if (xrpEnt.isEmpty()){
                     Hawk.delete("ripple");
                 }else {
-                    double xrp = Double.parseDouble(xrpEntered.getText().toString());
+                    double xrp = Double.parseDouble(xrpEnt);
                     Hawk.put("ripple", xrp);
+                }
+
+                String dashEnt = dashEntered.getText().toString();
+
+                if (dashEnt.isEmpty()){
+                    Hawk.delete("dash");
+                }else {
+                    double dash = Double.parseDouble(dashEnt);
+                    Hawk.put("dash", dash);
                 }
 
                 String ltcEnt = ltcEntered.getText().toString();
@@ -112,7 +128,7 @@ public class CoinAddActivity extends AppCompatActivity {
                 if (ltcEnt.isEmpty()) {
                     Hawk.delete("litecoin");
                 }else{
-                    double ltc = Double.parseDouble(ltcEntered.getText().toString());
+                    double ltc = Double.parseDouble(ltcEnt);
                     Hawk.put("litecoin", ltc);
                 }
 
@@ -121,7 +137,7 @@ public class CoinAddActivity extends AppCompatActivity {
                 if (ukgEnt.isEmpty()) {
                     Hawk.delete("unikoin_gold");
                 }else {
-                    double ukg = Double.parseDouble(ukgEntered.getText().toString());
+                    double ukg = Double.parseDouble(ukgEnt);
                     Hawk.put("unikoin_gold", ukg);
                 }
 
@@ -129,9 +145,6 @@ public class CoinAddActivity extends AppCompatActivity {
             }
 
         });
-
-
-
 
     }
 }

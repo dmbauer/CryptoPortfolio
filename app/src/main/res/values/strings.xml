@@ -18,5 +18,8 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="title_activity_chart">ChartActivity</string>
 
+    <string-array name="currency_array">
+        <item>USD</item>
+    </string-array>
 
 </resources>
