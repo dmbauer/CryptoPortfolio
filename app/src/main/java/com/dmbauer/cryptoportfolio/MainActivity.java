@@ -74,8 +74,6 @@ public class MainActivity extends AppCompatActivity
 
     double btcWealth, bchWealth, ethWealth, xrpWealth, ltcWealth, ukgWealth, dashWealth;
 
-    double btcOwn, ethOwn, bchOwn, xrpOwn, ltcOwn, ukgOwn;
-
     float[] mBtcHistory, mEthHistory, mLtcHistory, mUkgHistory, mBchHistory, mXrpHistory, mDashHistory;
 
 
@@ -83,6 +81,41 @@ public class MainActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        mBitcoinView = findViewById(R.id.bitcoin_view);
+        mBtcPrice = findViewById(R.id.btc_price);
+        mBtcOwned = findViewById(R.id.btc_owned);
+        mUsdBtcWorth = findViewById(R.id.usd_worth_btc);
+
+        mEthereumView = findViewById(R.id.ethereum_view);
+        mEthPrice = findViewById(R.id.eth_price);
+        mEthOwned = findViewById(R.id.eth_owned);
+        mUsdEthWorth = findViewById(R.id.usd_worth_eth);
+
+        mBitcoinCashView = findViewById(R.id.bitcoin_cash_view);
+        mBchPrice = findViewById(R.id.bch_price);
+        mBchOwned = findViewById(R.id.bch_owned);
+        mUsdBchWorth = findViewById(R.id.usd_worth_bch);
+
+        mRippleView = findViewById(R.id.ripple_view);
+        mXrpPrice = findViewById(R.id.xrp_price);
+        mXrpOwned = findViewById(R.id.xrp_owned);
+        mUsdXrpWorth = findViewById(R.id.usd_worth_xrp);
+
+        mDashView = findViewById(R.id.dash_view);
+        mDashPrice = findViewById(R.id.dash_price);
+        mDashOwned = findViewById(R.id.dash_owned);
+        mUsdDashWorth = findViewById(R.id.usd_worth_dash);
+
+        mLitecoinView = findViewById(R.id.litecoin_view);
+        mLtcPrice = findViewById(R.id.ltc_price);
+        mLtcOwned = findViewById(R.id.ltc_owned);
+        mUsdLtcWorth = findViewById(R.id.usd_worth_ltc);
+
+        mUnikoinGoldView = findViewById(R.id.unikoin_gold_view);
+        mUkgPrice = findViewById(R.id.ukg_price);
+        mUkgOwned = findViewById(R.id.ukg_owned);
+        mUsdUkgWorth = findViewById(R.id.usd_worth_ukg);
 
         Hawk.init(this).build();
 
@@ -101,6 +134,83 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(MainActivity.this, CoinAddActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        mBitcoinView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, CoinDetailActivity.class);
+                intent.putExtra("viewID", "bitcoin");
+                intent.putExtra("coinURL", BITCOIN_URL);
+                intent.putExtra("coinHistoryURL", BITCOIN_HISTORY_URL);
+                startActivity(intent);
+            }
+        });
+
+        mEthereumView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, CoinDetailActivity.class);
+                intent.putExtra("viewID", "ethereum");
+                intent.putExtra("coinURL", ETHEREUM_URL);
+                intent.putExtra("coinHistoryURL", ETHEREUM_HISTORY_URL);
+                startActivity(intent);
+            }
+        });
+
+        mBitcoinCashView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, CoinDetailActivity.class);
+                intent.putExtra("viewID", "bitcoin_cash");
+                intent.putExtra("coinURL", BITCOIN_CASH_URL);
+                intent.putExtra("coinHistoryURL", BITCOIN_CASH_HISTORY_URL);
+                startActivity(intent);
+            }
+        });
+
+        mRippleView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, CoinDetailActivity.class);
+                intent.putExtra("viewID", "ripple");
+                intent.putExtra("coinURL", RIPPLE_URL);
+                intent.putExtra("coinHistoryURL", RIPPLE_HISTORY_URL);
+                startActivity(intent);
+            }
+        });
+
+        mDashView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, CoinDetailActivity.class);
+                intent.putExtra("viewID", "dash");
+                intent.putExtra("coinURL", DASH_URL);
+                intent.putExtra("coinHistoryURL", DASH_HISTORY_URL);
+                startActivity(intent);
+            }
+        });
+
+        mLitecoinView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, CoinDetailActivity.class);
+                intent.putExtra("viewID", "litecoin");
+                intent.putExtra("coinURL", LITECOIN_URL);
+                intent.putExtra("coinHistoryURL", LITECOIN_HISTORY_URL);
+                startActivity(intent);
+            }
+        });
+
+        mUnikoinGoldView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, CoinDetailActivity.class);
+                intent.putExtra("viewID", "unikoin_gold");
+                intent.putExtra("coinURL", UNIKOIN_GOLD_URL);
+                intent.putExtra("coinHistoryURL", UNIKOIN_GOLD_HISTORY_URL);
                 startActivity(intent);
             }
         });
@@ -469,41 +579,6 @@ public class MainActivity extends AppCompatActivity
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
 
-            mBitcoinView = findViewById(R.id.bitcoin_view);
-            mBtcPrice = findViewById(R.id.btc_price);
-            mBtcOwned = findViewById(R.id.btc_owned);
-            mUsdBtcWorth = findViewById(R.id.usd_worth_btc);
-
-            mEthereumView = findViewById(R.id.ethereum_view);
-            mEthPrice = findViewById(R.id.eth_price);
-            mEthOwned = findViewById(R.id.eth_owned);
-            mUsdEthWorth = findViewById(R.id.usd_worth_eth);
-
-            mBitcoinCashView = findViewById(R.id.bitcoin_cash_view);
-            mBchPrice = findViewById(R.id.bch_price);
-            mBchOwned = findViewById(R.id.bch_owned);
-            mUsdBchWorth = findViewById(R.id.usd_worth_bch);
-
-            mRippleView = findViewById(R.id.ripple_view);
-            mXrpPrice = findViewById(R.id.xrp_price);
-            mXrpOwned = findViewById(R.id.xrp_owned);
-            mUsdXrpWorth = findViewById(R.id.usd_worth_xrp);
-
-            mDashView = findViewById(R.id.dash_view);
-            mDashPrice = findViewById(R.id.dash_price);
-            mDashOwned = findViewById(R.id.dash_owned);
-            mUsdDashWorth = findViewById(R.id.usd_worth_dash);
-
-            mLitecoinView = findViewById(R.id.litecoin_view);
-            mLtcPrice = findViewById(R.id.ltc_price);
-            mLtcOwned = findViewById(R.id.ltc_owned);
-            mUsdLtcWorth = findViewById(R.id.usd_worth_ltc);
-
-            mUnikoinGoldView = findViewById(R.id.unikoin_gold_view);
-            mUkgPrice = findViewById(R.id.ukg_price);
-            mUkgOwned = findViewById(R.id.ukg_owned);
-            mUsdUkgWorth = findViewById(R.id.usd_worth_ukg);
-
             LineChart btcLineChart = findViewById(R.id.btc_line_chart);
             LineChart ethLineChart = findViewById(R.id.eth_line_chart);
             LineChart ltcLineChart = findViewById(R.id.ltc_line_chart);
@@ -612,7 +687,7 @@ public class MainActivity extends AppCompatActivity
 
             if(Hawk.get("bitcoin") != null) {
 
-                btcOwn = Hawk.get("bitcoin");
+                double btcOwn = Hawk.get("bitcoin");
                 mBtcOwned.setText(Double.toString(btcOwn) + " BTC");
 
                 double bitcoin = Math.round(btcPrice * 100.0) / 100.0;
@@ -635,7 +710,7 @@ public class MainActivity extends AppCompatActivity
 
             if(Hawk.get("ethereum") != null){
 
-                ethOwn = Hawk.get("ethereum");
+                double ethOwn = Hawk.get("ethereum");
                 mEthOwned.setText(Double.toString(ethOwn) + " ETH");
 
                 double ethereum = Math.round(ethPrice * 100.0) / 100.0;
@@ -658,7 +733,7 @@ public class MainActivity extends AppCompatActivity
 
             if(Hawk.get("bitcoin_cash") != null){
 
-                bchOwn = Hawk.get("bitcoin_cash");
+                double bchOwn = Hawk.get("bitcoin_cash");
                 mBchOwned.setText(Double.toString(bchOwn) + " BCH");
 
                 double bitcoinCash = Math.round(bchPrice * 100.0) / 100.0;
@@ -681,7 +756,7 @@ public class MainActivity extends AppCompatActivity
 
             if(Hawk.get("ripple") != null){
 
-                xrpOwn = Hawk.get("ripple");
+                double xrpOwn = Hawk.get("ripple");
                 mXrpOwned.setText(Double.toString(xrpOwn) + " XRP");
 
                 double ripple = Math.round(xrpPrice * 100.0) / 100.0;
@@ -727,7 +802,7 @@ public class MainActivity extends AppCompatActivity
 
             if(Hawk.get("litecoin") != null) {
 
-                ltcOwn = Hawk.get("litecoin");
+                double ltcOwn = Hawk.get("litecoin");
                 mLtcOwned.setText(Double.toString(ltcOwn) + " LTC");
 
                 double litecoin = Math.round(ltcPrice * 100.0) / 100.0;
@@ -750,7 +825,7 @@ public class MainActivity extends AppCompatActivity
 
             if(Hawk.get("unikoin_gold") != null) {
 
-                ukgOwn = Hawk.get("unikoin_gold");
+                double ukgOwn = Hawk.get("unikoin_gold");
                 mUkgOwned.setText(Double.toString(ukgOwn) + " UKG");
 
                 double unikoin = Math.round(ukgPrice * 100.0) / 100.0;
