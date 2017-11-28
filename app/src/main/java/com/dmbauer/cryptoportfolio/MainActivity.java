@@ -1,5 +1,6 @@
 package com.dmbauer.cryptoportfolio;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -76,11 +77,20 @@ public class MainActivity extends AppCompatActivity
 
     float[] mBtcHistory, mEthHistory, mLtcHistory, mUkgHistory, mBchHistory, mXrpHistory, mDashHistory;
 
+    ProgressDialog dialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        String message = "Loading cryptocurrency data...";
+
+        dialog = new ProgressDialog(this);
+        dialog.setMessage(message);
+        dialog.setCancelable(false);
+        dialog.setInverseBackgroundForced(false);
+        dialog.show();
 
         mBitcoinView = findViewById(R.id.bitcoin_view);
         mBtcPrice = findViewById(R.id.btc_price);
@@ -142,7 +152,7 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, CoinDetailActivity.class);
-                intent.putExtra("viewID", "bitcoin");
+                intent.putExtra("viewID", "BTC");
                 intent.putExtra("coinURL", BITCOIN_URL);
                 intent.putExtra("coinHistoryURL", BITCOIN_HISTORY_URL);
                 startActivity(intent);
@@ -153,7 +163,7 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, CoinDetailActivity.class);
-                intent.putExtra("viewID", "ethereum");
+                intent.putExtra("viewID", "ETH");
                 intent.putExtra("coinURL", ETHEREUM_URL);
                 intent.putExtra("coinHistoryURL", ETHEREUM_HISTORY_URL);
                 startActivity(intent);
@@ -164,7 +174,7 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, CoinDetailActivity.class);
-                intent.putExtra("viewID", "bitcoin_cash");
+                intent.putExtra("viewID", "BCH");
                 intent.putExtra("coinURL", BITCOIN_CASH_URL);
                 intent.putExtra("coinHistoryURL", BITCOIN_CASH_HISTORY_URL);
                 startActivity(intent);
@@ -175,7 +185,7 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, CoinDetailActivity.class);
-                intent.putExtra("viewID", "ripple");
+                intent.putExtra("viewID", "XRP");
                 intent.putExtra("coinURL", RIPPLE_URL);
                 intent.putExtra("coinHistoryURL", RIPPLE_HISTORY_URL);
                 startActivity(intent);
@@ -186,7 +196,7 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, CoinDetailActivity.class);
-                intent.putExtra("viewID", "dash");
+                intent.putExtra("viewID", "DASH");
                 intent.putExtra("coinURL", DASH_URL);
                 intent.putExtra("coinHistoryURL", DASH_HISTORY_URL);
                 startActivity(intent);
@@ -197,7 +207,7 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, CoinDetailActivity.class);
-                intent.putExtra("viewID", "litecoin");
+                intent.putExtra("viewID", "LTC");
                 intent.putExtra("coinURL", LITECOIN_URL);
                 intent.putExtra("coinHistoryURL", LITECOIN_HISTORY_URL);
                 startActivity(intent);
@@ -208,7 +218,7 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, CoinDetailActivity.class);
-                intent.putExtra("viewID", "unikoin_gold");
+                intent.putExtra("viewID", "UKG");
                 intent.putExtra("coinURL", UNIKOIN_GOLD_URL);
                 intent.putExtra("coinHistoryURL", UNIKOIN_GOLD_HISTORY_URL);
                 startActivity(intent);
@@ -870,7 +880,11 @@ public class MainActivity extends AppCompatActivity
             int totalWealth = (int) (btcWealth + bchWealth + ethWealth + xrpWealth + ltcWealth + ukgWealth + dashWealth);
 
             getSupportActionBar().setTitle("Total: " + "$" + Double.toString(totalWealth));
+
+        dialog.hide();
+
         }
+
 
     }
 

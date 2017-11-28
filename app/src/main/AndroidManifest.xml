@@ -24,12 +24,15 @@
         </activity>
         <activity
             android:name=".CoinAddActivity"
+            android:screenOrientation="portrait"
             android:parentActivityName=".MainActivity" />
         <activity
             android:name=".ChartActivity"
+            android:screenOrientation="portrait"
             android:parentActivityName=".MainActivity" />
         <activity
             android:name=".DonateActivity"
+            android:screenOrientation="portrait"
             android:parentActivityName=".MainActivity" />
         <activity android:name=".SettingsActivity" />
         <activity android:name=".CoinDetailActivity"></activity>
