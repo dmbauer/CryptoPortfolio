@@ -12,9 +12,9 @@ import com.orhanobut.hawk.Hawk;
 public class CoinAddActivity extends AppCompatActivity {
 
     Button mSaveButton;
-    EditText btcEntered, ethEntered, bchEntered, xrpEntered, ltcEntered, ukgEntered, dashEntered;
-    double currentBitcoin, currentEthereum, currentBitcoinCash, currentRipple, currentLitecoin, currentUnikoinGold;
-    String currentBtc, currentEth, currentBch, currentXrp, currentLtc, currentUkg;
+    EditText btcEntered, ethEntered, bchEntered, xrpEntered, ltcEntered, ukgEntered, dashEntered, xlmEntered;
+    double currentBitcoin, currentEthereum, currentBitcoinCash, currentRipple, currentLitecoin, currentLumen, currentUnikoinGold;
+    String currentBtc, currentEth, currentBch, currentXrp, currentLtc, currentUkg, currentXlm;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,6 +29,7 @@ public class CoinAddActivity extends AppCompatActivity {
         ltcEntered = findViewById(R.id.enter_ltc);
         ukgEntered = findViewById(R.id.enter_ukg);
         dashEntered = findViewById(R.id.enter_dash);
+        xlmEntered = findViewById(R.id.enter_xlm);
 
         if(Hawk.get("bitcoin") != null) {
             currentBitcoin = Hawk.get("bitcoin");
@@ -64,6 +65,12 @@ public class CoinAddActivity extends AppCompatActivity {
             currentLitecoin = Hawk.get("litecoin");
             currentLtc = Double.toString(currentLitecoin);
             ltcEntered.setText(currentLtc);
+        }
+
+        if(Hawk.get("lumen") != null) {
+            currentLumen = Hawk.get("lumen");
+            currentXlm = Double.toString(currentLumen);
+            xlmEntered.setText(currentXlm);
         }
 
         if(Hawk.get("unikoin_gold") != null) {
@@ -130,6 +137,15 @@ public class CoinAddActivity extends AppCompatActivity {
                 }else{
                     double ltc = Double.parseDouble(ltcEnt);
                     Hawk.put("litecoin", ltc);
+                }
+
+                String xlmEnt = xlmEntered.getText().toString();
+
+                if (xlmEnt.isEmpty()){
+                    Hawk.delete("lumen");
+                }else {
+                    double xlm = Double.parseDouble(xlmEnt);
+                    Hawk.put("lumen", xlm);
                 }
 
                 String ukgEnt = ukgEntered.getText().toString();

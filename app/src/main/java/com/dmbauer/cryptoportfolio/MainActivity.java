@@ -34,7 +34,9 @@ import com.orhanobut.hawk.Hawk;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.Locale;
 
 import cz.msebera.android.httpclient.Header;
 
@@ -49,6 +51,7 @@ public class MainActivity extends AppCompatActivity
     final String LITECOIN_URL = CRYPTO_URL + "litecoin";
     final String UNIKOIN_GOLD_URL = CRYPTO_URL + "unikoin-gold";
     final String DASH_URL = CRYPTO_URL + "dash";
+    final String LUMEN_URL = CRYPTO_URL + "stellar";
 
     final String BITCOIN_HISTORY_URL = "https://min-api.cryptocompare.com/data/histominute?fsym=BTC&tsym=USD&limit=96&aggregate=15&e=CCCAGG";
     final String ETHEREUM_HISTORY_URL = "https://min-api.cryptocompare.com/data/histominute?fsym=ETH&tsym=USD&limit=96&aggregate=15&e=CCCAGG";
@@ -57,6 +60,7 @@ public class MainActivity extends AppCompatActivity
     final String BITCOIN_CASH_HISTORY_URL = "https://min-api.cryptocompare.com/data/histominute?fsym=BCH&tsym=USD&limit=96&aggregate=15&e=CCCAGG";
     final String RIPPLE_HISTORY_URL = "https://min-api.cryptocompare.com/data/histominute?fsym=XRP&tsym=USD&limit=96&aggregate=15&e=CCCAGG";
     final String DASH_HISTORY_URL = "https://min-api.cryptocompare.com/data/histominute?fsym=DASH&tsym=USD&limit=96&aggregate=15&e=CCCAGG";
+    final String LUMEN_HISTORY_URL = "https://min-api.cryptocompare.com/data/histominute?fsym=XLM&tsym=USD&limit=96&aggregate=15&e=CCCAGG";
 
     TextView mBtcPrice, mBtcOwned, mUsdBtcWorth;
     TextView mEthPrice, mEthOwned, mUsdEthWorth;
@@ -65,17 +69,18 @@ public class MainActivity extends AppCompatActivity
     TextView mLtcPrice, mLtcOwned, mUsdLtcWorth;
     TextView mUkgPrice, mUkgOwned, mUsdUkgWorth;
     TextView mDashPrice, mDashOwned, mUsdDashWorth;
+    TextView mXlmPrice, mXlmOwned, mUsdXlmWorth;
 
-    View mBitcoinView, mEthereumView, mBitcoinCashView, mRippleView, mLitecoinView, mUnikoinGoldView, mDashView;
+    View mBitcoinView, mEthereumView, mBitcoinCashView, mRippleView, mLitecoinView, mUnikoinGoldView, mDashView, mLumenView;
 
     SwipeRefreshLayout refreshLayout;
 
-    double btcPrice, ethPrice, bchPrice, xrpPrice, ltcPrice, ukgPrice, dashPrice;
-    double btcChange24, ethChange24, bchChange24, xrpChange24, ltcChange24, ukgChange24, dashChange24;
+    double btcPrice, ethPrice, bchPrice, xrpPrice, ltcPrice, ukgPrice, dashPrice, xlmPrice;
+    double btcChange24, ethChange24, bchChange24, xrpChange24, ltcChange24, ukgChange24, dashChange24, xlmChange24;
 
-    double btcWealth, bchWealth, ethWealth, xrpWealth, ltcWealth, ukgWealth, dashWealth;
+    double btcWealth, bchWealth, ethWealth, xrpWealth, ltcWealth, ukgWealth, dashWealth, xlmWealth;
 
-    float[] mBtcHistory, mEthHistory, mLtcHistory, mUkgHistory, mBchHistory, mXrpHistory, mDashHistory;
+    float[] mBtcHistory, mEthHistory, mLtcHistory, mUkgHistory, mBchHistory, mXrpHistory, mDashHistory, mXlmHistory;
 
     ProgressDialog dialog;
 
@@ -126,6 +131,11 @@ public class MainActivity extends AppCompatActivity
         mUkgPrice = findViewById(R.id.ukg_price);
         mUkgOwned = findViewById(R.id.ukg_owned);
         mUsdUkgWorth = findViewById(R.id.usd_worth_ukg);
+
+        mLumenView = findViewById(R.id.lumen_view);
+        mXlmPrice = findViewById(R.id.xlm_price);
+        mXlmOwned = findViewById(R.id.xlm_owned);
+        mUsdXlmWorth = findViewById(R.id.usd_worth_xlm);
 
         Hawk.init(this).build();
 
@@ -210,6 +220,17 @@ public class MainActivity extends AppCompatActivity
                 intent.putExtra("viewID", "LTC");
                 intent.putExtra("coinURL", LITECOIN_URL);
                 intent.putExtra("coinHistoryURL", LITECOIN_HISTORY_URL);
+                startActivity(intent);
+            }
+        });
+
+        mLumenView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, CoinDetailActivity.class);
+                intent.putExtra("viewID", "XLM");
+                intent.putExtra("coinURL", LUMEN_URL);
+                intent.putExtra("coinHistoryURL", LUMEN_HISTORY_URL);
                 startActivity(intent);
             }
         });
@@ -532,6 +553,56 @@ public class MainActivity extends AppCompatActivity
                     });
                 }
 
+            if (Hawk.get("lumen") != null) {
+
+                client.get(LUMEN_URL, new JsonHttpResponseHandler() {
+
+                    @Override
+                    public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
+                        // called when response HTTP status is "200 OK"
+                        Log.d("CryptoPortfolio", "JSON: " + response.toString());
+
+                        GetCoinData coinData = GetCoinData.fromJson(response);
+
+                        xlmPrice = coinData.getCoinPrice();
+                        xlmChange24 = coinData.getPercentChange24();
+
+                    }
+
+                    @Override
+                    public void onFailure(int statusCode, Header[] headers, Throwable e, JSONObject response) {
+                        // called when response HTTP status is "4XX" (eg. 401, 403, 404)
+                        Log.e("CryptoPortfolio", "Fail " + e.toString());
+                        Log.d("CryptoPortfolio", "Status code " + statusCode);
+                    }
+
+                });
+
+
+                client.get(LUMEN_HISTORY_URL, new JsonHttpResponseHandler() {
+
+                    @Override
+                    public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                        // called when response HTTP status is "200 OK"
+                        Log.d("CryptoPortfolio", "JSON: " + response.toString());
+
+                        GetCoinHistory coinHistory = GetCoinHistory.fromJson(response);
+
+                        mXlmHistory = coinHistory.getCoinHistory();
+
+                    }
+
+                    @Override
+                    public void onFailure(int statusCode, Header[] headers, Throwable e, JSONObject response) {
+                        // called when response HTTP status is "4XX" (eg. 401, 403, 404)
+                        Log.e("CryptoPortfolio", "Fail " + e.toString());
+                        Log.d("CryptoPortfolio", "Status code " + statusCode);
+                    }
+
+                });
+
+            }
+
                 if(Hawk.get("unikoin_gold") != null) {
 
                     client.get(UNIKOIN_GOLD_URL, new JsonHttpResponseHandler() {
@@ -596,6 +667,7 @@ public class MainActivity extends AppCompatActivity
             LineChart xrpLineChart = findViewById(R.id.xrp_line_chart);
             LineChart ukgLineChart = findViewById(R.id.ukg_line_chart);
             LineChart dashLineChart = findViewById(R.id.dash_line_chart);
+            LineChart xlmLineChart = findViewById(R.id.xlm_line_chart);
 
             if(mBtcHistory != null) {
                 ArrayList<Entry> btcEntries = new ArrayList<>();
@@ -681,6 +753,20 @@ public class MainActivity extends AppCompatActivity
                 setLineProperties(ltcLineChart, ltcDataSet);
             }
 
+            if(mXlmHistory != null) {
+                ArrayList<Entry> xlmEntries = new ArrayList<>();
+                for (int i = 0; i < mXlmHistory.length; i++) {
+                    xlmEntries.add(new Entry(i, mXlmHistory[i]));
+                }
+
+                LineDataSet xlmDataSet = new LineDataSet(xlmEntries, "");
+                LineData xlmData = new LineData(xlmDataSet);
+                xlmLineChart.setData(xlmData);
+                xlmDataSet.setColor(getResources().getColor(R.color.colorPurple));
+
+                setLineProperties(xlmLineChart, xlmDataSet);
+            }
+
             if(mUkgHistory != null) {
                 ArrayList<Entry> ukgEntries = new ArrayList<>();
                 for (int i = 0; i < mUkgHistory.length; i++) {
@@ -700,8 +786,7 @@ public class MainActivity extends AppCompatActivity
                 double btcOwn = Hawk.get("bitcoin");
                 mBtcOwned.setText(Double.toString(btcOwn) + " BTC");
 
-                double bitcoin = Math.round(btcPrice * 100.0) / 100.0;
-                String btc = "$" + Double.toString(bitcoin);
+                String btc = "$" + NumberFormat.getNumberInstance(Locale.US).format(btcPrice);
                 mBtcPrice.setText(btc);
 
                 float bitcoinValue = (float) (Math.round((btcOwn * btcPrice) * 100.0) / 100.0);
@@ -723,8 +808,7 @@ public class MainActivity extends AppCompatActivity
                 double ethOwn = Hawk.get("ethereum");
                 mEthOwned.setText(Double.toString(ethOwn) + " ETH");
 
-                double ethereum = Math.round(ethPrice * 100.0) / 100.0;
-                String eth = "$" + Double.toString(ethereum);
+                String eth = "$" + NumberFormat.getNumberInstance(Locale.US).format(ethPrice);
                 mEthPrice.setText(eth);
 
                 float ethereumValue = (float) (Math.round((ethOwn * ethPrice) * 100.0) / 100.0);
@@ -746,8 +830,7 @@ public class MainActivity extends AppCompatActivity
                 double bchOwn = Hawk.get("bitcoin_cash");
                 mBchOwned.setText(Double.toString(bchOwn) + " BCH");
 
-                double bitcoinCash = Math.round(bchPrice * 100.0) / 100.0;
-                String bch = "$" + Double.toString(bitcoinCash);
+                String bch = "$" + NumberFormat.getNumberInstance(Locale.US).format(bchPrice);
                 mBchPrice.setText(bch);
 
                 float bitcoinCashValue = (float) (Math.round((bchOwn * bchPrice) * 100.0) / 100.0);
@@ -769,8 +852,7 @@ public class MainActivity extends AppCompatActivity
                 double xrpOwn = Hawk.get("ripple");
                 mXrpOwned.setText(Double.toString(xrpOwn) + " XRP");
 
-                double ripple = Math.round(xrpPrice * 100.0) / 100.0;
-                String xrp = "$" + Double.toString(ripple);
+                String xrp = "$" + NumberFormat.getNumberInstance(Locale.US).format(xrpPrice);
                 mXrpPrice.setText(xrp);
 
                 float rippleValue = (float) (Math.round((xrpOwn * xrpPrice) * 100.0) / 100.0);
@@ -792,8 +874,7 @@ public class MainActivity extends AppCompatActivity
                 double dashOwn = Hawk.get("dash");
                 mDashOwned.setText(Double.toString(dashOwn) + " DASH");
 
-                double dash = Math.round(dashPrice * 100.0) / 100.0;
-                String dsh = "$" + Double.toString(dash);
+                String dsh = "$" + NumberFormat.getNumberInstance(Locale.US).format(dashPrice);
                 mDashPrice.setText(dsh);
 
                 float dashValue = (float) (Math.round((dashOwn * dashPrice) * 100.0) / 100.0);
@@ -815,8 +896,7 @@ public class MainActivity extends AppCompatActivity
                 double ltcOwn = Hawk.get("litecoin");
                 mLtcOwned.setText(Double.toString(ltcOwn) + " LTC");
 
-                double litecoin = Math.round(ltcPrice * 100.0) / 100.0;
-                String ltc = "$" + Double.toString(litecoin);
+                String ltc = "$" + NumberFormat.getNumberInstance(Locale.US).format(ltcPrice);
                 mLtcPrice.setText(ltc);
 
                 float litecoinValue = (float) (Math.round((ltcOwn * ltcPrice) * 100.0) / 100.0);
@@ -833,13 +913,34 @@ public class MainActivity extends AppCompatActivity
 
             }
 
+            if(Hawk.get("lumen") != null) {
+
+                double xlmOwn = Hawk.get("lumen");
+                mXlmOwned.setText(Double.toString(xlmOwn) + " XLM");
+
+                String xlm = "$" + NumberFormat.getNumberInstance(Locale.US).format(xlmPrice);
+                mXlmPrice.setText(xlm);
+
+                float lumenValue = (float) (Math.round((xlmOwn * xlmPrice) * 100.0) / 100.0);
+                String usdXlmPrice = "$" + Float.toString(lumenValue);
+                mUsdXlmWorth.setText(usdXlmPrice);
+
+                xlmWealth = xlmOwn * xlmPrice;
+
+                Hawk.put("lumen_value", lumenValue);
+
+            }else {
+
+                mLumenView.setVisibility(View.GONE);
+
+            }
+
             if(Hawk.get("unikoin_gold") != null) {
 
                 double ukgOwn = Hawk.get("unikoin_gold");
                 mUkgOwned.setText(Double.toString(ukgOwn) + " UKG");
 
-                double unikoin = Math.round(ukgPrice * 100.0) / 100.0;
-                String ukg = "$" + Double.toString(unikoin);
+                String ukg = "$" + NumberFormat.getNumberInstance(Locale.US).format(ukgPrice);
                 mUkgPrice.setText(ukg);
 
                 float unikoinValue = (float) (Math.round((ukgOwn * ukgPrice) * 100.0) / 100.0);
@@ -877,7 +978,7 @@ public class MainActivity extends AppCompatActivity
             NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
             navigationView.setNavigationItemSelectedListener(MainActivity.this);
 
-            int totalWealth = (int) (btcWealth + bchWealth + ethWealth + xrpWealth + ltcWealth + ukgWealth + dashWealth);
+            int totalWealth = (int) (btcWealth + bchWealth + ethWealth + xrpWealth + ltcWealth + xlmWealth + ukgWealth + dashWealth);
 
             getSupportActionBar().setTitle("Total: " + "$" + Double.toString(totalWealth));
 
