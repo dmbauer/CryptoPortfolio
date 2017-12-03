@@ -13,6 +13,10 @@
             android:icon="@drawable/ic_pie_chart"
             android:title="Charts" />
         <item
+            android:id="@+id/nav_all_coins"
+            android:icon="@drawable/ic_eth"
+            android:title="Coin List" />
+        <item
             android:id="@+id/nav_add_coins"
             android:icon="@drawable/ic_menu_slideshow"
             android:title="Add Coins" />
@@ -20,6 +24,7 @@
             android:id="@+id/nav_donate"
             android:icon="@drawable/ic_btc"
             android:title="Donate" />
+
     </group>
 
 </menu>

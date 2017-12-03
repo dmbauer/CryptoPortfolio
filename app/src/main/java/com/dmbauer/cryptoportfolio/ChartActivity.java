@@ -18,7 +18,7 @@ import com.orhanobut.hawk.Hawk;
 
 public class ChartActivity extends AppCompatActivity {
 
-    float bitcoinValue, ethereumValue, bitcoinCashValue, rippleValue, litecoinValue, unikoinGoldValue, dashValue;
+    float bitcoinValue, ethereumValue, bitcoinCashValue, rippleValue, litecoinValue, unikoinGoldValue, dashValue, lumenValue;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,13 +59,18 @@ public class ChartActivity extends AppCompatActivity {
             entries.add(new PieEntry(litecoinValue, "Litecoin"));
         }
 
+        if(Hawk.get("lumen") != null) {
+            lumenValue = Hawk.get("lumen_value");
+            entries.add(new PieEntry(lumenValue, "Lumen"));
+        }
+
         if(Hawk.get("unikoin_gold") != null) {
             unikoinGoldValue = Hawk.get("unikoin_gold_value");
             entries.add(new PieEntry(unikoinGoldValue, "Unikoin Gold"));
         }
 
         float portfolioValue = Math.round(((bitcoinValue + ethereumValue +
-                bitcoinCashValue + rippleValue + litecoinValue + unikoinGoldValue + dashValue) * 100.0) / 100.0);
+                bitcoinCashValue + rippleValue + litecoinValue + lumenValue + unikoinGoldValue + dashValue) * 100.0) / 100.0);
         String totalValue = Float.toString(portfolioValue);
 
         PieDataSet pieDataSet = new PieDataSet(entries, "");
@@ -75,7 +80,7 @@ public class ChartActivity extends AppCompatActivity {
         pieChart.setEntryLabelColor(Color.parseColor("#757575"));
         pieDataSet.setColors(ColorTemplate.VORDIPLOM_COLORS);
         pieChart.setCenterText("$" + totalValue);
-        pieChart.setCenterTextSize(48);
+        pieChart.setCenterTextSize(42);
 
         Description description = new Description();
         description.setText("");

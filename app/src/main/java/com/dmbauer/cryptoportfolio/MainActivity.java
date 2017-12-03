@@ -962,6 +962,7 @@ public class MainActivity extends AppCompatActivity
             }
 
             refreshLayout.setVisibility(View.VISIBLE);
+            refreshLayout.setRefreshing(false);
 
             ConstraintLayout loadingLayout = findViewById(R.id.loading_layout);
             loadingLayout.setVisibility(View.GONE);
@@ -1071,12 +1072,16 @@ public class MainActivity extends AppCompatActivity
             Intent intent = new Intent(MainActivity.this, ChartActivity.class);
             startActivity(intent);
 
+        } else if (id == R.id.nav_all_coins) {
+            Intent intent = new Intent(MainActivity.this, CoinsActivity.class);
+            startActivity(intent);
+
         } else if (id == R.id.nav_add_coins) {
             Intent intent = new Intent(MainActivity.this, CoinAddActivity.class);
             startActivity(intent);
 
         } else if (id == R.id.nav_donate) {
-            Intent intent = new Intent(MainActivity.this, DonateActivity.class);
+            Intent intent = new Intent(MainActivity.this, PortfolioActivity.class);
             startActivity(intent);
         }
 
