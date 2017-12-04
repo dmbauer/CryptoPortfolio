@@ -50,8 +50,8 @@ public class CoinAdapter extends ArrayAdapter<Coin> {
         int coinRank = currentCoin.getCoinRank();
         String sCoinOwn = "";
 
-        if (Hawk.get(coinID) != null) {
-            double coinOwn = Hawk.get(coinID);
+        if (Hawk.get(coinSymbol) != null) {
+            double coinOwn = Hawk.get(coinSymbol);
             sCoinOwn = Double.toString(coinOwn);
         }
 
@@ -66,14 +66,14 @@ public class CoinAdapter extends ArrayAdapter<Coin> {
         coinRankTextView.setText(sCoinRank);
 
         TextView coinSymbolTextView = (TextView) listItemView.findViewById(R.id.list_coin_symbol);
-        String sCoinSymbol = "(" + coinSymbol + ")";
+        String sCoinSymbol = coinSymbol;
         coinSymbolTextView.setText(sCoinSymbol);
 
         TextView coinPriceUsdTextView = (TextView) listItemView.findViewById(R.id.list_coin_price_usd);
         String sCoinPriceUsd = "$" + Double.toString(coinPriceUsd);
         coinPriceUsdTextView.setText(sCoinPriceUsd);
 
-        TextView coinOwnedTextView = (TextView) listItemView.findViewById(R.id.list_coins_owned);
+        TextView coinOwnedTextView = (TextView) listItemView.findViewById(R.id.list_coin_owned);
         if (sCoinOwn != null) {
             coinOwnedTextView.setText(sCoinOwn);
         }

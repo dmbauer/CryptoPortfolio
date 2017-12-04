@@ -9,12 +9,14 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.support.annotation.LayoutRes;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.text.InputType;
+import android.text.Layout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -48,9 +50,10 @@ public class CoinsActivity extends AppCompatActivity implements LoaderManager.Lo
     /** TextView that is displayed when the list is empty */
     private TextView mEmptyStateTextView;
 
-    TextView coinsOwndedTV;
+    TextView coinOwnTextView;
     TextView coinSymbolTV;
     EditText mInput;
+    String coinSymbol;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -107,24 +110,19 @@ public class CoinsActivity extends AppCompatActivity implements LoaderManager.Lo
             public void onItemClick(AdapterView<?> adapter, View v, int position,
                                     long arg3) {
 
-                coinSymbolTV = (TextView) v.findViewById(R.id.list_coin_symbol);
-                String coinSymbol = coinSymbolTV.getText().toString();
-
-                coinsOwndedTV = (TextView) v.findViewById(R.id.list_coin_owned);
-
-                if(!coinsOwndedTV.getText().toString().equals("")){
-                    String coinOwn = coinsOwndedTV.getText().toString();
-                }
-
-                double coinOwned = Hawk.get(coinSymbol);
-                String sCoinOwned = Double.toString(coinOwned);
-                coinsOwndedTV.setText(sCoinOwned);
-
                 mInput = new EditText(CoinsActivity.this);
 
                 mInput.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
 
-                mInput.setText(coinOwn);
+                coinOwnTextView = (TextView) v.findViewById(R.id.list_coin_owned);
+                TextView coinSymbolTextView = (TextView) v.findViewById(R.id.list_coin_symbol);
+                coinSymbol = coinSymbolTextView.getText().toString();
+                if(Hawk.get(coinSymbol) != null) {
+                    double coinOwn = Hawk.get(coinSymbol);
+                    String sCoinOwn = Double.toString(coinOwn);
+                    coinOwnTextView.setText(sCoinOwn);
+                    mInput.setText(sCoinOwn);
+                }
 
                 AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(CoinsActivity.this);
 
@@ -143,7 +141,7 @@ public class CoinsActivity extends AppCompatActivity implements LoaderManager.Lo
                                 }else {
                                     double own = Double.parseDouble(entered);
                                     Hawk.put(coinSymbol, own);
-                                    coinsOwndedTV.setText(entered);
+                                    coinOwnTextView.setText(entered);
                                 }
                             }
                         })
@@ -159,6 +157,7 @@ public class CoinsActivity extends AppCompatActivity implements LoaderManager.Lo
 
             }
         });
+
 
     }
 
