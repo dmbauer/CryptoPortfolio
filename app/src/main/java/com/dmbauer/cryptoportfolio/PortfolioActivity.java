@@ -247,6 +247,8 @@ public class PortfolioActivity extends AppCompatActivity implements NavigationVi
         // Clear the adapter of previous earthquake data
         mAdapter.clear();
 
+        Hawk.delete("coins");
+
         // If there is a valid list of {@link Coin}, then add them to the adapter's
         // data set. This will trigger the ListView to update.
         if (coins != null && !coins.isEmpty()) {
