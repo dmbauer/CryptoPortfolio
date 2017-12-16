@@ -37,7 +37,7 @@ public class CoinDetailActivity extends AppCompatActivity {
     double coinPrice, coinChange24, coinChange1, coinChange7d, marketCapUsd;
     int coinRank;
     float[] coinHistoryArray;
-    String strdata, url1Y, url1M, url24, url1W, url1H, historyURL;
+    String coinSymbol, coindata, coinName, coinDetailURL, url1Y, url1M, url24, url1W, url1H, historyURL;
     Intent intent;
     Button yearButton, monthButton, weekButton, hour24Button, oneHourButton;
 
@@ -55,12 +55,16 @@ public class CoinDetailActivity extends AppCompatActivity {
         monthButton = (Button) findViewById(R.id.month_button);
 
         intent = CoinDetailActivity.this.getIntent();
-        strdata = intent.getExtras().getString("viewID");
-        url1Y = "https://min-api.cryptocompare.com/data/histoday?fsym=" + strdata + "&tsym=USD&limit=120&aggregate=3&e=CCCAGG";
-        url24 = "https://min-api.cryptocompare.com/data/histominute?fsym=" + strdata + "&tsym=USD&limit=96&aggregate=15&e=CCCAGG";
-        url1W = "https://min-api.cryptocompare.com/data/histohour?fsym=" + strdata + "&tsym=USD&limit=84&aggregate=2&e=CCCAGG";
-        url1M = "https://min-api.cryptocompare.com/data/histohour?fsym=" + strdata + "&tsym=USD&limit=120&aggregate=6&e=CCCAGG";
-        url1H = "https://min-api.cryptocompare.com/data/histominute?fsym=" + strdata + "&tsym=USD&limit=60&aggregate=1&e=CCCAGG";
+        coinSymbol = intent.getExtras().getString("coinSymbol");
+        coindata = intent.getExtras().getString("coinID");
+        coinName = intent.getExtras().getString("coinName");
+
+        coinDetailURL = "https://api.coinmarketcap.com/v1/ticker/" + coindata;
+        url1Y = "https://min-api.cryptocompare.com/data/histoday?fsym=" + coinSymbol + "&tsym=USD&limit=120&aggregate=3&e=CCCAGG";
+        url24 = "https://min-api.cryptocompare.com/data/histominute?fsym=" + coinSymbol + "&tsym=USD&limit=96&aggregate=15&e=CCCAGG";
+        url1W = "https://min-api.cryptocompare.com/data/histohour?fsym=" + coinSymbol + "&tsym=USD&limit=84&aggregate=2&e=CCCAGG";
+        url1M = "https://min-api.cryptocompare.com/data/histohour?fsym=" + coinSymbol + "&tsym=USD&limit=120&aggregate=6&e=CCCAGG";
+        url1H = "https://min-api.cryptocompare.com/data/histominute?fsym=" + coinSymbol + "&tsym=USD&limit=60&aggregate=1&e=CCCAGG";
 
         hour24Button.setBackgroundColor(getResources().getColor(R.color.colorPrimaryLight));
 
@@ -201,6 +205,9 @@ public class CoinDetailActivity extends AppCompatActivity {
 
                 setLineProperties(coinLineChart, coinDataSet);
 
+                View progressBar = findViewById(R.id.progress_bar_coin_detail);
+                progressBar.setVisibility(View.GONE);
+
             }
         }
     }
@@ -210,13 +217,9 @@ public class CoinDetailActivity extends AppCompatActivity {
         @Override
         protected Void doInBackground(Void... voids) {
 
-            Intent intent = CoinDetailActivity.this.getIntent();
-            String coinURL = intent.getExtras().getString("coinURL");
-            String coinHistoryURL = intent.getExtras().getString("coinHistoryURL");
-
             SyncHttpClient client = new SyncHttpClient();
 
-            client.get(coinURL, new JsonHttpResponseHandler() {
+            client.get(coinDetailURL, new JsonHttpResponseHandler() {
 
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
@@ -231,29 +234,6 @@ public class CoinDetailActivity extends AppCompatActivity {
                     coinChange7d = coinData.getPercentChange7d();
                     coinRank = coinData.getRank();
                     marketCapUsd = coinData.getMarketCapUsd();
-
-                }
-
-                @Override
-                public void onFailure(int statusCode, Header[] headers, Throwable e, JSONObject response) {
-                    // called when response HTTP status is "4XX" (eg. 401, 403, 404)
-                    Log.e("CryptoPortfolio", "Fail " + e.toString());
-                    Log.d("CryptoPortfolio", "Status code " + statusCode);
-                }
-
-            });
-
-
-            client.get(coinHistoryURL, new JsonHttpResponseHandler() {
-
-                @Override
-                public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                    // called when response HTTP status is "200 OK"
-                    Log.d("CryptoPortfolio", "JSON: " + response.toString());
-
-                    GetCoinHistory coinHistory = GetCoinHistory.fromJson(response);
-
-                    coinHistoryArray = coinHistory.getCoinHistory();
 
                 }
 
@@ -286,12 +266,14 @@ public class CoinDetailActivity extends AppCompatActivity {
             Intent intent = CoinDetailActivity.this.getIntent();
             if (intent != null) {
 
-                String coin24, coin1, coin7, rank, price, marketCap, ownedValue;
-                double coinOwn, owned;
-
-                String strdata = intent.getExtras().getString("viewID");
+                String coin24, coin1, coin7, rank, price, marketCap;
+                double coinOwn;
 
                 LineChart coinLineChart = findViewById(R.id.coin_detail_chart);
+
+                historyURL = url24;
+
+                new HistoryLoader().execute();
 
                 if (coinHistoryArray != null) {
                     ArrayList<Entry> entries = new ArrayList<>();
@@ -306,421 +288,59 @@ public class CoinDetailActivity extends AppCompatActivity {
                     setLineProperties(coinLineChart, coinDataSet);
                 }
 
-                if (strdata.equals("BTC")) {
+                ImageGetter imageGetter = new ImageGetter(coinSymbol);
+                int image = imageGetter.getImage();
 
-                    coinImage.setImageResource(R.drawable.btc2x);
+                coinImage.setImageResource(image);
 
-                    coinOwn = Hawk.get("bitcoin");
+                coinOwn = Hawk.get(coinSymbol);
 
-                    owned = Math.round((coinOwn * coinPrice) * 100.0) / 100.0;
-                    ownedValue = "Bitcoin ($" + Double.toString(owned) + ")";
+                String coinNameValue = coinName + " ($" +
+                        NumberFormat.getNumberInstance(Locale.US).format(coinOwn * coinPrice) + ")";
 
-                    coinTextView.setText(ownedValue);
+                coinTextView.setText(coinNameValue);
 
-                    marketCap = "$" + NumberFormat.getNumberInstance(Locale.US).format(marketCapUsd);
-                    coinMarketCapTextView.setText(marketCap);
+                marketCap = "$" + NumberFormat.getNumberInstance(Locale.US).format(marketCapUsd);
+                coinMarketCapTextView.setText(marketCap);
 
-                    rank = "#" + Integer.toString(coinRank);
-                    coinRankTextView.setText(rank);
+                rank = "#" + Integer.toString(coinRank);
+                coinRankTextView.setText(rank);
 
-                    price = "$" + NumberFormat.getNumberInstance(Locale.US).format(coinPrice);
-                    coinPriceTextView.setText(price);
+                price = "$" + NumberFormat.getNumberInstance(Locale.US).format(coinPrice);
+                coinPriceTextView.setText(price);
 
-                    coinOwned.setText(Double.toString(coinOwn) + " BTC");
-                    coin24 = Double.toString(coinChange24) + "%";
-                    coin1 = Double.toString(coinChange1) + "%";
-                    coin7 = Double.toString(coinChange7d) + "%";
+                coinOwned.setText(Double.toString(coinOwn) + " " + coinSymbol);
+                coin24 = Double.toString(coinChange24) + "%";
+                coin1 = Double.toString(coinChange1) + "%";
+                coin7 = Double.toString(coinChange7d) + "%";
 
-                    if (coinChange24 > 0) {
-                        coin24hr.setText(coin24);
-                        coin24hr.setTextColor(getResources().getColor(R.color.colorGreen));
-                    } else {
-                        coin24hr.setText(coin24);
-                        coin24hr.setTextColor(getResources().getColor(R.color.colorRed));
-                    }
-
-                    if (coinChange1 > 0) {
-                        coin1hr.setText(coin1);
-                        coin1hr.setTextColor(getResources().getColor(R.color.colorGreen));
-                    } else {
-                        coin1hr.setText(coin1);
-                        coin1hr.setTextColor(getResources().getColor(R.color.colorRed));
-                    }
-
-                    if (coinChange7d > 0) {
-                        coin7d.setText(coin7);
-                        coin7d.setTextColor(getResources().getColor(R.color.colorGreen));
-                    } else {
-                        coin7d.setText(coin7);
-                        coin7d.setTextColor(getResources().getColor(R.color.colorRed));
-                    }
-
-                }
-                if (strdata.equals("ETH")) {
-
-                    coinImage.setImageResource(R.drawable.eth2x);
-
-                    coinOwn = Hawk.get("ethereum");
-
-                    owned = Math.round((coinOwn * coinPrice) * 100.0) / 100.0;
-                    ownedValue = "Ethereum ($" + Double.toString(owned) + ")";
-
-                    coinTextView.setText(ownedValue);
-
-                    marketCap = "$" + NumberFormat.getNumberInstance(Locale.US).format(marketCapUsd);
-                    coinMarketCapTextView.setText(marketCap);
-
-                    rank = "#" + Integer.toString(coinRank);
-                    coinRankTextView.setText(rank);
-
-                    price = "$" + NumberFormat.getNumberInstance(Locale.US).format(coinPrice);
-                    coinPriceTextView.setText(price);
-
-                    coinOwned.setText(Double.toString(coinOwn) + " ETH");
-
-                    coin24 = Double.toString(coinChange24) + "%";
-                    coin1 = Double.toString(coinChange1) + "%";
-                    coin7 = Double.toString(coinChange7d) + "%";
-
-                    if (coinChange24 > 0) {
-                        coin24hr.setText(coin24);
-                        coin24hr.setTextColor(getResources().getColor(R.color.colorGreen));
-                    } else {
+                if (coinChange24 > 0) {
+                    coin24hr.setText(coin24);
+                    coin24hr.setTextColor(getResources().getColor(R.color.colorGreen));
+                } else {
                         coin24hr.setText(coin24);
                         coin24hr.setTextColor(getResources().getColor(R.color.colorRed));
-                    }
-
-                    if (coinChange1 > 0) {
-                        coin1hr.setText(coin1);
-                        coin1hr.setTextColor(getResources().getColor(R.color.colorGreen));
-                    } else {
-                        coin1hr.setText(coin1);
-                        coin1hr.setTextColor(getResources().getColor(R.color.colorRed));
-                    }
-
-                    if (coinChange7d > 0) {
-                        coin7d.setText(coin7);
-                        coin7d.setTextColor(getResources().getColor(R.color.colorGreen));
-                    } else {
-                        coin7d.setText(coin7);
-                        coin7d.setTextColor(getResources().getColor(R.color.colorRed));
-                    }
-
-                }
-                if (strdata.equals("BCH")) {
-
-                    coinImage.setImageResource(R.drawable.bch2x);
-
-                    coinOwn = Hawk.get("bitcoin_cash");
-
-                    owned = Math.round((coinOwn * coinPrice) * 100.0) / 100.0;
-                    ownedValue = "BitcoinCash ($" + Double.toString(owned) + ")";
-
-                    coinTextView.setText(ownedValue);
-
-                    marketCap = "$" + NumberFormat.getNumberInstance(Locale.US).format(marketCapUsd);
-                    coinMarketCapTextView.setText(marketCap);
-
-                    rank = "#" + Integer.toString(coinRank);
-                    coinRankTextView.setText(rank);
-
-                    price = "$" + NumberFormat.getNumberInstance(Locale.US).format(coinPrice);
-                    coinPriceTextView.setText(price);
-
-                    coinOwned.setText(Double.toString(coinOwn) + " BCH");
-
-                    coin24 = Double.toString(coinChange24) + "%";
-                    coin1 = Double.toString(coinChange1) + "%";
-                    coin7 = Double.toString(coinChange7d) + "%";
-
-                    if (coinChange24 > 0) {
-                        coin24hr.setText(coin24);
-                        coin24hr.setTextColor(getResources().getColor(R.color.colorGreen));
-                    } else {
-                        coin24hr.setText(coin24);
-                        coin24hr.setTextColor(getResources().getColor(R.color.colorRed));
-                    }
-
-                    if (coinChange1 > 0) {
-                        coin1hr.setText(coin1);
-                        coin1hr.setTextColor(getResources().getColor(R.color.colorGreen));
-                    } else {
-                        coin1hr.setText(coin1);
-                        coin1hr.setTextColor(getResources().getColor(R.color.colorRed));
-                    }
-
-                    if (coinChange7d > 0) {
-                        coin7d.setText(coin7);
-                        coin7d.setTextColor(getResources().getColor(R.color.colorGreen));
-                    } else {
-                        coin7d.setText(coin7);
-                        coin7d.setTextColor(getResources().getColor(R.color.colorRed));
-                    }
-
                 }
 
-                if (strdata.equals("XRP")) {
-
-                    coinImage.setImageResource(R.drawable.xrp2x);
-
-                    coinOwn = Hawk.get("ripple");
-
-                    owned = Math.round((coinOwn * coinPrice) * 100.0) / 100.0;
-                    ownedValue = "Ripple ($" + Double.toString(owned) + ")";
-
-                    coinTextView.setText(ownedValue);
-
-                    marketCap = "$" + NumberFormat.getNumberInstance(Locale.US).format(marketCapUsd);
-                    coinMarketCapTextView.setText(marketCap);
-
-                    rank = "#" + Integer.toString(coinRank);
-                    coinRankTextView.setText(rank);
-
-                    price = "$" + NumberFormat.getNumberInstance(Locale.US).format(coinPrice);
-                    coinPriceTextView.setText(price);
-
-                    coinOwned.setText(Double.toString(coinOwn) + " XRP");
-
-                    coin24 = Double.toString(coinChange24) + "%";
-                    coin1 = Double.toString(coinChange1) + "%";
-                    coin7 = Double.toString(coinChange7d) + "%";
-
-                    if (coinChange24 > 0) {
-                        coin24hr.setText(coin24);
-                        coin24hr.setTextColor(getResources().getColor(R.color.colorGreen));
-                    } else {
-                        coin24hr.setText(coin24);
-                        coin24hr.setTextColor(getResources().getColor(R.color.colorRed));
-                    }
-
-                    if (coinChange1 > 0) {
-                        coin1hr.setText(coin1);
-                        coin1hr.setTextColor(getResources().getColor(R.color.colorGreen));
-                    } else {
-                        coin1hr.setText(coin1);
-                        coin1hr.setTextColor(getResources().getColor(R.color.colorRed));
-                    }
-
-                    if (coinChange7d > 0) {
-                        coin7d.setText(coin7);
-                        coin7d.setTextColor(getResources().getColor(R.color.colorGreen));
-                    } else {
-                        coin7d.setText(coin7);
-                        coin7d.setTextColor(getResources().getColor(R.color.colorRed));
-                    }
-
-                }
-                if (strdata.equals("DASH")) {
-
-                    coinImage.setImageResource(R.drawable.dash2x);
-
-                    coinOwn = Hawk.get("dash");
-
-                    owned = Math.round((coinOwn * coinPrice) * 100.0) / 100.0;
-                    ownedValue = "Dash ($" + Double.toString(owned) + ")";
-
-                    coinTextView.setText(ownedValue);
-
-                    marketCap = "$" + NumberFormat.getNumberInstance(Locale.US).format(marketCapUsd);
-                    coinMarketCapTextView.setText(marketCap);
-
-                    rank = "#" + Integer.toString(coinRank);
-                    coinRankTextView.setText(rank);
-
-                    price = "$" + NumberFormat.getNumberInstance(Locale.US).format(coinPrice);
-                    coinPriceTextView.setText(price);
-
-                    coinOwned.setText(Double.toString(coinOwn) + " DASH");
-
-                    coin24 = Double.toString(coinChange24) + "%";
-                    coin1 = Double.toString(coinChange1) + "%";
-                    coin7 = Double.toString(coinChange7d) + "%";
-
-                    if (coinChange24 > 0) {
-                        coin24hr.setText(coin24);
-                        coin24hr.setTextColor(getResources().getColor(R.color.colorGreen));
-                    } else {
-                        coin24hr.setText(coin24);
-                        coin24hr.setTextColor(getResources().getColor(R.color.colorRed));
-                    }
-
-                    if (coinChange1 > 0) {
-                        coin1hr.setText(coin1);
-                        coin1hr.setTextColor(getResources().getColor(R.color.colorGreen));
-                    } else {
-                        coin1hr.setText(coin1);
-                        coin1hr.setTextColor(getResources().getColor(R.color.colorRed));
-                    }
-
-                    if (coinChange7d > 0) {
-                        coin7d.setText(coin7);
-                        coin7d.setTextColor(getResources().getColor(R.color.colorGreen));
-                    } else {
-                        coin7d.setText(coin7);
-                        coin7d.setTextColor(getResources().getColor(R.color.colorRed));
-                    }
-
+                if (coinChange1 > 0) {
+                    coin1hr.setText(coin1);
+                    coin1hr.setTextColor(getResources().getColor(R.color.colorGreen));
+                } else {
+                    coin1hr.setText(coin1);
+                    coin1hr.setTextColor(getResources().getColor(R.color.colorRed));
                 }
 
-                if (strdata.equals("LTC")) {
-
-                    coinImage.setImageResource(R.drawable.ltc2x);
-
-                    coinOwn = Hawk.get("litecoin");
-
-                    owned = Math.round((coinOwn * coinPrice) * 100.0) / 100.0;
-                    ownedValue = "Litecoin ($" + Double.toString(owned) + ")";
-
-                    coinTextView.setText(ownedValue);
-
-                    marketCap = "$" + NumberFormat.getNumberInstance(Locale.US).format(marketCapUsd);
-                    coinMarketCapTextView.setText(marketCap);
-
-                    rank = "#" + Integer.toString(coinRank);
-                    coinRankTextView.setText(rank);
-
-                    price = "$" + NumberFormat.getNumberInstance(Locale.US).format(coinPrice);
-                    coinPriceTextView.setText(price);
-
-                    coinOwned.setText(Double.toString(coinOwn) + " LTC");
-
-                    coin24 = Double.toString(coinChange24) + "%";
-                    coin1 = Double.toString(coinChange1) + "%";
-                    coin7 = Double.toString(coinChange7d) + "%";
-
-                    if (coinChange24 > 0) {
-                        coin24hr.setText(coin24);
-                        coin24hr.setTextColor(getResources().getColor(R.color.colorGreen));
-                    } else {
-                        coin24hr.setText(coin24);
-                        coin24hr.setTextColor(getResources().getColor(R.color.colorRed));
-                    }
-
-                    if (coinChange1 > 0) {
-                        coin1hr.setText(coin1);
-                        coin1hr.setTextColor(getResources().getColor(R.color.colorGreen));
-                    } else {
-                        coin1hr.setText(coin1);
-                        coin1hr.setTextColor(getResources().getColor(R.color.colorRed));
-                    }
-
-                    if (coinChange7d > 0) {
-                        coin7d.setText(coin7);
-                        coin7d.setTextColor(getResources().getColor(R.color.colorGreen));
-                    } else {
-                        coin7d.setText(coin7);
-                        coin7d.setTextColor(getResources().getColor(R.color.colorRed));
-                    }
+                if (coinChange7d > 0) {
+                    coin7d.setText(coin7);
+                    coin7d.setTextColor(getResources().getColor(R.color.colorGreen));
+                } else {
+                    coin7d.setText(coin7);
+                    coin7d.setTextColor(getResources().getColor(R.color.colorRed));
                 }
 
-                    if (strdata.equals("XLM")) {
-
-                        coinImage.setImageResource(R.drawable.xlm2x);
-
-                        coinOwn = Hawk.get("lumen");
-
-                        owned = Math.round((coinOwn * coinPrice) * 100.0) / 100.0;
-                        ownedValue = "Lumen ($" + Double.toString(owned) + ")";
-
-                        coinTextView.setText(ownedValue);
-
-                        marketCap = "$" + NumberFormat.getNumberInstance(Locale.US).format(marketCapUsd);
-                        coinMarketCapTextView.setText(marketCap);
-
-                        rank = "#" + Integer.toString(coinRank);
-                        coinRankTextView.setText(rank);
-
-                        price = "$" + NumberFormat.getNumberInstance(Locale.US).format(coinPrice);
-                        coinPriceTextView.setText(price);
-
-                        coinOwned.setText(Double.toString(coinOwn) + " XLM");
-                        coin24 = Double.toString(coinChange24) + "%";
-                        coin1 = Double.toString(coinChange1) + "%";
-                        coin7 = Double.toString(coinChange7d) + "%";
-
-                        if (coinChange24 > 0) {
-                            coin24hr.setText(coin24);
-                            coin24hr.setTextColor(getResources().getColor(R.color.colorGreen));
-                        } else {
-                            coin24hr.setText(coin24);
-                            coin24hr.setTextColor(getResources().getColor(R.color.colorRed));
-                        }
-
-                        if (coinChange1 > 0) {
-                            coin1hr.setText(coin1);
-                            coin1hr.setTextColor(getResources().getColor(R.color.colorGreen));
-                        } else {
-                            coin1hr.setText(coin1);
-                            coin1hr.setTextColor(getResources().getColor(R.color.colorRed));
-                        }
-
-                        if (coinChange7d > 0) {
-                            coin7d.setText(coin7);
-                            coin7d.setTextColor(getResources().getColor(R.color.colorGreen));
-                        } else {
-                            coin7d.setText(coin7);
-                            coin7d.setTextColor(getResources().getColor(R.color.colorRed));
-                        }
-
-                    }
-
-                    if (strdata.equals("UKG")) {
-
-                        coinImage.setImageResource(R.drawable.ic_ukg);
-
-                        coinOwn = Hawk.get("unikoin_gold");
-
-                        owned = Math.round((coinOwn * coinPrice) * 100.0) / 100.0;
-                        ownedValue = "UnikoinGold ($" + Double.toString(owned) + ")";
-
-                        coinTextView.setText(ownedValue);
-
-                        marketCap = "$" + NumberFormat.getNumberInstance(Locale.US).format(marketCapUsd);
-                        coinMarketCapTextView.setText(marketCap);
-
-                        rank = "#" + Integer.toString(coinRank);
-                        coinRankTextView.setText(rank);
-
-                        price = "$" + NumberFormat.getNumberInstance(Locale.US).format(coinPrice);
-                        coinPriceTextView.setText(price);
-
-                        coinOwned.setText(Double.toString(coinOwn) + " UKG");
-
-                        coin24 = Double.toString(coinChange24) + "%";
-                        coin1 = Double.toString(coinChange1) + "%";
-                        coin7 = Double.toString(coinChange7d) + "%";
-
-                        if (coinChange24 > 0) {
-                            coin24hr.setText(coin24);
-                            coin24hr.setTextColor(getResources().getColor(R.color.colorGreen));
-                        } else {
-                            coin24hr.setText(coin24);
-                            coin24hr.setTextColor(getResources().getColor(R.color.colorRed));
-                        }
-
-                        if (coinChange1 > 0) {
-                            coin1hr.setText(coin1);
-                            coin1hr.setTextColor(getResources().getColor(R.color.colorGreen));
-                        } else {
-                            coin1hr.setText(coin1);
-                            coin1hr.setTextColor(getResources().getColor(R.color.colorRed));
-                        }
-
-                        if (coinChange7d > 0) {
-                            coin7d.setText(coin7);
-                            coin7d.setTextColor(getResources().getColor(R.color.colorGreen));
-                        } else {
-                            coin7d.setText(coin7);
-                            coin7d.setTextColor(getResources().getColor(R.color.colorRed));
-                        }
-
-                    }
-
-                    View progressBar = findViewById(R.id.progress_bar_coin_detail);
-                    progressBar.setVisibility(View.GONE);
-                }
             }
         }
+    }
 
         public void setLineProperties(LineChart lineChart, LineDataSet dataSet) {
             Description description = new Description();
@@ -759,4 +379,5 @@ public class CoinDetailActivity extends AppCompatActivity {
             lineChart.invalidate();
         }
     }
+
 

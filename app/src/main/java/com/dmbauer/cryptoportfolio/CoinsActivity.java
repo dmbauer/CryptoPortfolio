@@ -1,24 +1,15 @@
 package com.dmbauer.cryptoportfolio;
 
 import android.app.AlertDialog;
-import android.app.Dialog;
-import android.app.DialogFragment;
-import android.app.LauncherActivity;
 import android.app.LoaderManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.support.annotation.LayoutRes;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
 import android.text.InputType;
-import android.text.Layout;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.EditText;
@@ -34,17 +25,17 @@ public class CoinsActivity extends AppCompatActivity implements LoaderManager.Lo
 
     public CoinsActivity() {}
 
-    private static final String COIN_MARKET_CAP_URL = "https://api.coinmarketcap.com/v1/ticker/?limit=200";
+    private static final String COIN_MARKET_CAP_URL = "https://api.coinmarketcap.com/v1/ticker/?limit=1000";
 
     /**
-     * Constant value for the weather loader ID. Can choose any integer.
+     * Constant value for the coin loader ID. Can choose any integer.
      * This really only comes into play if you're using multiple loaders.
      */
     private static final int COIN_LOADER_ID = 2;
 
     public static final String LOG_TAG = CoinsActivity.class.getName();
 
-    /** Adapter for the list of weather */
+    /** Adapter for the list of coins */
     private CoinAdapter mAdapter;
 
     /** TextView that is displayed when the list is empty */
@@ -66,7 +57,7 @@ public class CoinsActivity extends AppCompatActivity implements LoaderManager.Lo
         mEmptyStateTextView = (TextView) findViewById(R.id.empty_view);
         coinListView.setEmptyView(mEmptyStateTextView);
 
-        // Create a new adapter that takes an empty list of weather as input
+        // Create a new adapter that takes an empty list of coin as input
         mAdapter = new CoinAdapter(getApplicationContext(), new ArrayList<Coin>());
 
         // Set the adapter on the {@link ListView}

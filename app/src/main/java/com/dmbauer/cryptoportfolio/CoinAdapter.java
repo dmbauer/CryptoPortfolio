@@ -1,16 +1,10 @@
 package com.dmbauer.cryptoportfolio;
 
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.text.InputType;
-import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.EditText;
 import android.widget.TextView;
 
 import com.orhanobut.hawk.Hawk;
@@ -40,7 +34,7 @@ public class CoinAdapter extends ArrayAdapter<Coin> {
                     R.layout.coin_list_item, parent, false);
         }
 
-        // Find the weather at the given position in the list of weathers
+        // Find the weather at the given position in the list of coins
         Coin currentCoin = getItem(position);
 
         String coinName = currentCoin.getCoinName();
@@ -55,10 +49,7 @@ public class CoinAdapter extends ArrayAdapter<Coin> {
             sCoinOwn = Double.toString(coinOwn);
         }
 
-
-        // Find the TextView with view ID weather_text_view
         TextView coinNameTextView = (TextView) listItemView.findViewById(R.id.list_coin_name);
-        // Display the location of the current earthquake in that TextView
         coinNameTextView.setText(coinName);
 
         TextView coinRankTextView = (TextView) listItemView.findViewById(R.id.list_coin_rank);

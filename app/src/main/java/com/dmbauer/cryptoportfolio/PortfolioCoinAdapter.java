@@ -1,7 +1,6 @@
 package com.dmbauer.cryptoportfolio;
 
 import android.content.Context;
-import android.media.Image;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,7 +34,7 @@ public class PortfolioCoinAdapter extends ArrayAdapter<Coin> {
         View listItemView = convertView;
         if (listItemView == null) {
             listItemView = LayoutInflater.from(getContext()).inflate(
-                    R.layout.portfolio_list_item2, parent, false);
+                    R.layout.portfolio_list_item, parent, false);
         }
 
         // Find the coin at the given position in the list of coins
@@ -51,7 +50,7 @@ public class PortfolioCoinAdapter extends ArrayAdapter<Coin> {
 
         if (Hawk.get(coinSymbol) != null) {
             double coinOwn = Hawk.get(coinSymbol);
-            sCoinOwn = Double.toString(coinOwn) + " " + coinSymbol;
+            sCoinOwn = Double.toString(coinOwn);
             double coinWorth = coinOwn * coinPriceUsd;
             sCoinWorth = "$" + NumberFormat.getNumberInstance(Locale.US).format(coinWorth);
         }
@@ -72,6 +71,14 @@ public class PortfolioCoinAdapter extends ArrayAdapter<Coin> {
 
         TextView coinOwnedTextView = (TextView) listItemView.findViewById(R.id.coin_owned);
         coinOwnedTextView.setText(sCoinOwn);
+
+        TextView coinSymbolTextView = (TextView) listItemView.findViewById(R.id.coin_symbol);
+        coinSymbolTextView.setText(coinSymbol);
+        coinSymbolTextView.setVisibility(View.GONE);
+
+        TextView coinIDTextView = (TextView) listItemView.findViewById(R.id.coin_id);
+        coinIDTextView.setText(coinID);
+        coinIDTextView.setVisibility(View.GONE);
 
         TextView coinWorthTextView = (TextView) listItemView.findViewById(R.id.coin_worth_usd);
         coinWorthTextView.setText(sCoinWorth);

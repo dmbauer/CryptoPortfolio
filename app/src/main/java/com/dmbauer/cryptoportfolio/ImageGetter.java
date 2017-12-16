@@ -23,8 +23,21 @@ public class ImageGetter {
         imageMap.put("LTC", R.drawable.ltc2x);
         imageMap.put("XLM", R.drawable.xlm2x);
         imageMap.put("UKG", R.drawable.ic_ukg);
+        imageMap.put("ARK", R.drawable.ark2x);
+        imageMap.put("IOTA", R.drawable.miota2x);
+        imageMap.put("ADA", R.drawable.ada2x);
+        imageMap.put("ETC", R.drawable.etc2x);
+        imageMap.put("NEO", R.drawable.neo2x);
+        imageMap.put("LSK", R.drawable.lsk2x);
+        imageMap.put("EOS", R.drawable.eos2x);
+        imageMap.put("STRAT", R.drawable.strat2x);
+        imageMap.put("XMR", R.drawable.xmr2x);
 
-        image = imageMap.get(s);
+        if (imageMap.containsKey(s)) {
+            image = imageMap.get(s);
+        } else {
+            image = R.drawable.ic_btc;
+        }
 
     }
 

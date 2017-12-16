@@ -51,10 +51,10 @@ public class PortfolioQueryUtils {
             Log.e(LOG_TAG, "Problem making the HTTP request.", e);
         }
 
-        // Extract relevant fields from the JSON response and create a list of {@link Weather}s
+        // Extract relevant fields from the JSON response and create a list of {@link Coin}s
         List<Coin> coins = extractFeatureFromJson(jsonResponse);
 
-        // Return the list of {@link Weather}s
+        // Return the list of {@link Coin}s
         return coins;
     }
 
@@ -150,7 +150,7 @@ public class PortfolioQueryUtils {
             Log.e("QueryUtils", "Problem parsing the coin JSON results", e);
         }
 
-        // Return the list of weathers
+        // Return the list of coins
         return coins;
     }
 
